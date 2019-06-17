@@ -8,13 +8,11 @@ use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TestCommand extends BaseCommand
+class TestCommand2 extends BaseCommand
 {
-    use LockableTrait;
-
     // the name of the command (the part after "bin/console")
     // 这个name 可以不用了，因为我们在config里面会配置name
-    protected static $defaultName = 'test:command';
+    protected static $defaultName = 'test:command2';
 
     /**
      * 这东西就是写一些参数说明或者参数约定用的
@@ -33,24 +31,25 @@ class TestCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $procStatus = proc_get_status();
         // 检查锁
-        if (!$this->lock()) {
-            $output->writeln('The command is already running in another process.');
 
-            return 0;
-        }
         // ...
-        $output->writeln('console 控制台输出1');
-        sleep(10);
-        $output->writeln('console 控制台输出2');
-
-        $this->container->logger->info("来自控制台的日志", [
+        $this->container->logger->info("来自控制台的日志" . $procStatus['pic'], [
             'a' => 1,
             'b' => 2,
             'c' => 3,
+            'status' => '开始执行耗时任务',
+        ]);
+        sleep(10);
+
+        $this->container->logger->info("来自控制台的日志" . $procStatus['pic'], [
+            'a' => 1,
+            'b' => 2,
+            'c' => 3,
+            'status' => '开始执行耗时任务结束',
         ]);
 
         // 释放锁
-        $this->release();
     }
 }

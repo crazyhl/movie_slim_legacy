@@ -1,4 +1,9 @@
 <?php
+
+use App\Command\TestCommand2;
+use App\Command\TestProcess;
+use App\Command\TestCommand;
+
 return [
     // slim settings
     'settings' => [
@@ -32,6 +37,8 @@ return [
     ],
     // console commands
     'commands' => [
-        'test:command' => \App\Command\TestCommand::class,
+        'test:command' => TestCommand::class,
+        'test:process' => TestProcess::class,
+        'test:command2' => TestCommand2::class,
     ],
 ];
