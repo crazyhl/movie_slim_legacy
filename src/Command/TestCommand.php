@@ -4,6 +4,7 @@
 namespace App\Command;
 
 
+use Carbon\Carbon;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,10 +40,14 @@ class TestCommand extends BaseCommand
 
             return 0;
         }
+        // 从时间字符串获取时间戳，别忘了设置时区哦
+        $res = Carbon::createFromTimeString('2018-04-28 16:16:09')->timestamp;
+        $this->container->logger->info('啦啦啦' .  $res);
         // ...
-        $output->writeln('console 控制台输出1');
+        $output->writeln('console 控制台输出' . $res);
         sleep(10);
         $output->writeln('console 控制台输出2');
+        $this->container->logger->info('啦啦啦2' .  $res);
 
         $this->container->logger->info("来自控制台的日志", [
             'a' => 1,

@@ -4,12 +4,13 @@
 namespace App\Command;
 
 
+use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Schema\Blueprint;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
-class TestProcess extends BaseCommand
+class InitDataBase extends BaseCommand
 {
     use LockableTrait;
 
@@ -34,18 +35,72 @@ class TestProcess extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $db = $this->container->db;
         // 检查锁
         if (!$this->lock()) {
             $output->writeln('The command is already running in another process.');
 
             return 0;
         }
-        $process = new Process(['php', '/var/www/movie_slim_legacy/console/index.php', 'test:command']);
-        $process->disableOutput();
-        $process->run();
 
-        $this->container->logger->info("process 搞定");
+        // 初始化db连接，否则连不上数据库
+        $this->container->db;
+
+        // 用户
+        $tableName = 'user';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('username')->unique()->comment('用户名');
+            $table->string('password', 255)->comment('密码');
+            $table->tinyInteger('is_admin')->default(0)->comment('是否是管理员标识');
+            $table->timestamps();
+        });
+        $output->writeln($tableName . ' 创建完成');
+        // 分类
+        $tableName = 'category';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->comment('分类名称');
+            $table->string('slug')->unique()->comment('分类别名用来url跳转用的');
+            $table->integer('parent_id')->default(0)->comment('父分类id');
+            $table->tinyInteger('is_show')->default(0)->comment('是否外显');
+            $table->tinyInteger('order')->default(0)->comment('排序，数字越大越靠前');
+            $table->timestamps();
+        });
+        $output->writeln($tableName . ' 创建完成');
+        // 来源网站
+        $tableName = 'source_movie_website';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->comment('来源网站名称');
+            $table->string('api_url')->unique()->comment('来源网站 api url');
+            $table->tinyInteger('status')->default(0)
+                ->comment('状态，不准备删除资源网站，可以禁用，不使用');
+            $table->timestamps();
+        });
+        $output->writeln($tableName . ' 创建完成');
+        // 定时任务
+        $tableName = 'cron_job';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')
+                ->comment('就是 command 的name');
+            $table->string('params')
+                ->comment('json 形式的参数，在执行的时候会被映射为 --xxx=xxx --aaa=aaa 这种');
+            $table->tinyInteger('type')
+                ->comment('任务类型，1 一次性任务 2 每小时 执行一次的任务，3 每天执行一次 ....');
+            $table->integer('execute_time')->unsigned()
+                ->comment('任务执行的时间，就是在遍历的时候如果这个时间小于当前时间了，就说明可以执行了');
+            $table->integer('max_execute_time')->unsigned()
+                ->comment('任务执行的最大时间，如果超过这个时间了，会考虑给杀死进程,如果是0 则不限');
+            $table->tinyInteger('status')->unsigned()
+                ->comment('任务执行状态 0 未执行 1 正在执行');
+            $table->timestamps();
+        });
+        $output->writeln($tableName . ' 创建完成');
 
         // 释放锁
         $this->release();

@@ -41,10 +41,12 @@ class TestProcess extends BaseCommand
             return 0;
         }
         $process = new Process(['php', '/var/www/movie_slim_legacy/console/index.php', 'test:command']);
-        $process->disableOutput();
-        $process->run();
+        $process->start();
+        $this->container->logger->info("process 开始". microtime(true));
+        $code = $process->stop(5);
+        $code2 = $process->wait();
+        $this->container->logger->info("process 结束" . $code . '--' . $code2);
 
-        $this->container->logger->info("process 搞定");
 
         // 释放锁
         $this->release();

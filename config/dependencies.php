@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Capsule\Manager;
 use Slim\App;
 use Slim\Views\Twig;
 
@@ -33,7 +34,7 @@ return function (App $app) {
 
     // Service factory for the ORM
     $container['db'] = function ($container) {
-        $capsule = new \Illuminate\Database\Capsule\Manager;
+        $capsule = new Manager;
         $capsule->addConnection($container['settings']['db']);
 
         $capsule->setAsGlobal();

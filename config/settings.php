@@ -1,5 +1,6 @@
 <?php
 
+use App\Command\InitDataBase;
 use App\Command\TestCommand2;
 use App\Command\TestProcess;
 use App\Command\TestCommand;
@@ -23,15 +24,14 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
 
-        'displayErrorDetails' => true,
         'db' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
-            'database' => 'database',
-            'username' => 'user',
-            'password' => 'password',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'host' => 'mysql',
+            'database' => 'movie',
+            'username' => 'root',
+            'password' => '123456789',
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',
         ],
     ],
@@ -40,5 +40,7 @@ return [
         'test:command' => TestCommand::class,
         'test:process' => TestProcess::class,
         'test:command2' => TestCommand2::class,
+        'db:init' => InitDataBase::class,
     ],
+    'tz' => 'Asia/Shanghai',
 ];

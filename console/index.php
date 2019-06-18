@@ -1,9 +1,14 @@
 <?php
 if (PHP_SAPI == 'cli') {
+    ini_set('date.timezone','Asia/Shanghai');
+
     require __DIR__ . '/../vendor/autoload.php';
 
     // Instantiate the app
     $settings = require __DIR__ . '/../config/settings.php';
+    // 设置时区
+    ini_set('date.timezone', $settings['tz']);
+
     $app = new \Slim\App($settings);
 
     // Set up dependencies
