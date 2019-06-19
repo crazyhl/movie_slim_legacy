@@ -5,8 +5,6 @@ namespace App\Command;
 
 
 use App\Model\User;
-use Illuminate\Database\Capsule\Manager;
-use Illuminate\Database\Schema\Blueprint;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
