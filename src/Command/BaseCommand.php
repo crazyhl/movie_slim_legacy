@@ -23,5 +23,7 @@ abstract class BaseCommand extends Command
     {
         parent::__construct($name);
         $this->container = $container;
+        // 初始化数据库连接
+        $this->container->db;
     }
 }

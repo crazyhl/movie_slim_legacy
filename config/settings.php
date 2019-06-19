@@ -1,5 +1,6 @@
 <?php
 
+use App\Command\InitAdmin;
 use App\Command\InitDataBase;
 use App\Command\TestCommand2;
 use App\Command\TestProcess;
@@ -41,6 +42,7 @@ return [
         'test:process' => TestProcess::class,
         'test:command2' => TestCommand2::class,
         'db:init' => InitDataBase::class,
+        'admin:init' => InitAdmin::class,
     ],
     'tz' => 'Asia/Shanghai',
 ];
