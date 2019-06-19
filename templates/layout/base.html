@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title | default('xx影视')}}</title>
+    {% block js %}
+    {% endblock %}
+    {% block css %}
+    {% endblock %}
 </head>
 <body>
-
+{% block content %}
+{% endblock %}
 </body>
 </html>
