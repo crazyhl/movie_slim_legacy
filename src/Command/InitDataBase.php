@@ -63,7 +63,7 @@ class InitDataBase extends BaseCommand
             $table->increments('id');
             $table->string('name')->comment('分类名称');
             $table->string('slug')->unique()->comment('分类别名用来url跳转用的');
-            $table->integer('parent_id')->default(0)->comment('父分类id');
+            $table->integer('parent_id')->index()->default(0)->comment('父分类id');
             $table->tinyInteger('is_show')->default(0)->comment('是否外显');
             $table->tinyInteger('order')->default(0)->comment('排序，数字越大越靠前');
             $table->timestamps();
@@ -99,6 +99,71 @@ class InitDataBase extends BaseCommand
             $table->tinyInteger('status')->unsigned()
                 ->comment('任务执行状态 0 未执行 1 正在执行');
             $table->timestamps();
+        });
+        $output->writeln($tableName . ' 创建完成');
+
+        // 来源站分类和本地分类关联表
+        $tableName = 'source_website_category_local_category_relation';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->integer('source_website_id');
+            $table->integer('source_website_category_id');
+            $table->integer('local_category_id');
+            $table->tinyInteger('is_show')->comment('就是来源网站下的这个分类抓回来的影片是否显示出来');
+            $table->unique([
+                'source_website_id',
+                'source_website_category_id',
+                'local_category_id',
+            ],'source_cate_id_local_cate_id');
+        });
+        $output->writeln($tableName . ' 创建完成');
+
+        // 电影
+        $tableName = 'movie';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->comment('影片名称');
+            $table->string('name_md5')->unique()->comment('影片名称md5 用来做唯一性验证');
+            $table->string('category_id')->index()->comment('本地分类id');
+            $table->string('pic')->comment('本地图片路径');
+            $table->string('lang')->comment('语言');
+            $table->string('area')->comment('地区');
+            $table->string('year')->comment('年份');
+            $table->string('note')->comment('简要说明');
+            $table->string('actor')->comment('演员');
+            $table->string('director')->comment('导演');
+            $table->text('description')->comment('简介');
+            $table->integer('is_show')->comment('是否外显');
+            $table->timestamps();
+        });
+        $output->writeln($tableName . ' 创建完成');
+
+        // 源站电影
+        $tableName = 'source_movie';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('source_website_id')->comment('源站id');
+            $table->integer('source_website_category_id')->comment('源站分类id');
+            $table->string('name')->comment('影片名称');
+            $table->string('name_md5')->unique()->comment('影片名称md5 用来做唯一性验证');
+            $table->string('category_id')->index()->comment('本地分类id');
+            $table->string('pic')->comment('本地图片路径');
+            $table->string('lang')->comment('语言');
+            $table->string('area')->comment('地区');
+            $table->string('year')->comment('年份');
+            $table->string('note')->comment('简要说明');
+            $table->string('actor')->comment('演员');
+            $table->string('director')->comment('导演');
+            $table->text('description')->comment('简介');
+            $table->text('movie_list')->comment('影片列表');
+            $table->timestamps();
+
+            $table->index([
+                'source_website_id',
+                'name_md5',
+            ]);
         });
         $output->writeln($tableName . ' 创建完成');
 

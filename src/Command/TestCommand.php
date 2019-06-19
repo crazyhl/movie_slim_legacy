@@ -4,6 +4,7 @@
 namespace App\Command;
 
 
+use App\Model\User;
 use Carbon\Carbon;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,6 +41,16 @@ class TestCommand extends BaseCommand
 
             return 0;
         }
+
+        $this->container->db;
+
+        $user = new User();
+        $user->username = '123';
+        $user->password = '12345';
+        $user->created_at = Carbon::createFromTimeString('2018/12/01 08:24');
+
+        $user->save();
+
         // 从时间字符串获取时间戳，别忘了设置时区哦
         $res = Carbon::createFromTimeString('2018-04-28 16:16:09')->timestamp;
         $this->container->logger->info('啦啦啦' .  $res);
