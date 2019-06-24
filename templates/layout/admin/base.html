@@ -11,14 +11,17 @@
     {% endblock %}
 </head>
 <body>
+{{ include('/layout/admin/header.html') }}
 <h1>Hello, world!</h1>
 {% block content %}
 {% endblock %}
-<footer class="footer mt-auto py-3">
+
+<footer class="fixed-bottom">
     <div class="container">
         <span class="text-muted">Place sticky footer content here.</span>
     </div>
 </footer>
+
 {% block js %}
 {% endblock %}
 <script src="/jquery/jquery.min.js"></script>
