@@ -33,6 +33,8 @@
             margin-bottom: 55px;
         }
     </style>
+    {% block css %}
+    {% endblock %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -694,5 +696,7 @@
 <script src="adminlte/dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="adminlte/dist/js/demo.js"></script>
+{% block js %}
+{% endblock %}
 </body>
 </html>
