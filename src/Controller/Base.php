@@ -5,10 +5,17 @@ namespace App\Controller;
 
 
 use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
 
 class Base
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+    /**
+     * @var Twig
+     */
     protected $view;
 
     public function __construct(ContainerInterface $container)

@@ -35,10 +35,7 @@ class Auth extends Base
      * @return mixed
      */
     public function loginAction(Request $request, Response $response){
-        $this->setTitle('后台登录');
-
-        return $this->view->render($response, 'admin/login.html', [
-            'formTitle' => '后台登录',
-        ]);
+        // 接受账号密码
+        var_dump($request->getParsedBody());
     }
 }
