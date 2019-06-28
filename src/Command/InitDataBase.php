@@ -53,6 +53,7 @@ class InitDataBase extends BaseCommand
             $table->string('username')->unique()->comment('用户名');
             $table->string('password', 255)->comment('密码');
             $table->tinyInteger('is_admin')->default(0)->comment('是否是管理员标识');
+            $table->string('token')->default('')->comment('是否是管理员标识');
             $table->timestamps();
         });
         $output->writeln($tableName . ' 创建完成');

@@ -13,6 +13,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
+// load env
+$dotenv = \Dotenv\Dotenv::create(__DIR__ . '/../');
+$dotenv->load();
+
 // Instantiate the app
 $settings = require __DIR__ . '/../config/settings.php';
 
