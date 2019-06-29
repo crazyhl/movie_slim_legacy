@@ -26,6 +26,10 @@
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
+            {% if error %}
+            <p class="bg-red" style="text-align: center; padding: 10px;">{{error}}</p>
+            {% endif %}
+
             <form action="/admin/login" method="post">
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" name="username" value="{{ oldUsername | default('')}}" placeholder="邮箱">

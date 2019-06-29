@@ -11,6 +11,9 @@ if (PHP_SAPI == 'cli-server') {
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// 设置 session_name
+session_name('CSESSID');
+
 session_start();
 
 // load env
