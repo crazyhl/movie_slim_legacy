@@ -22,7 +22,7 @@ class AlreadyLogin extends Base
      */
     public function __invoke($request, $response, $next)
     {
-        $referer = $request->getQueryParam('ref', $request->getHeader('HTTP_REFERER') ?: '/admin');
+        $referer = $request->getQueryParam('ref', $request->getHeader('HTTP_REFERER') ?: 'admin');
 
         $header = $request->getHeader('cookie');
         $cookies = Cookies::parseHeader($header);

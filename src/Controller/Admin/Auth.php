@@ -125,6 +125,7 @@ class Auth extends Base
             'expires' => -36000,
             'path' => '/',
         ]);
-        return $response->withRedirect($this->container->get('router')->pathFor('adminLogin'))->withHeader('Set-Cookie', $cookies->toHeaders());
+        return $response->withRedirect($this->container->get('router')->pathFor('adminLogin'))
+            ->withHeader('Set-Cookie', $cookies->toHeaders());
     }
 }
