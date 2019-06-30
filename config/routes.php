@@ -9,14 +9,13 @@ use App\Controller\Admin\Index as AdminIndex;
 return function (App $app) {
     $container = $app->getContainer();
 
-    $app->get('/admin', AdminIndex::class . ':index');
-    $app->get('/admin/index', AdminIndex::class . ':index');
+    $app->get('/admin', AdminIndex::class . ':index')->setName('admin');
+    $app->get('/admin/index', AdminIndex::class . ':index')->setName('adminIndex');
+    $app->get('/admin/login', Auth::class . ':login')->setName('adminLogin')->add(new AlreadyLogin($container));
 
-    $app->get('/[{name}]', Index::class . ':index');
-
-
-    $app->get('/admin/login', Auth::class . ':login')->add(new AlreadyLogin($container));
-    $app->post('/admin/login', Auth::class . ':loginAction');
+    $app->get('/[{name}]', Index::class . ':index')->setName('fromIndex');
 
 
+    $app->get('/admin/logout', Auth::class . ':logout')->setName('adminLogout');
+    $app->post('/admin/login', Auth::class . ':loginAction')->setName('adminLoginAction');
 };

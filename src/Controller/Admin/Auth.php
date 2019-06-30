@@ -107,4 +107,24 @@ class Auth extends Base
             'oldUsername' => $username,
         ]);
     }
+
+    /**
+     * 登出
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function logout(Request $request, Response $response)
+    {
+        session_unset();
+        $header = $request->getHeader('cookie');
+        $cookies = Cookies::parseHeader($header);
+        $cookies = new Cookies($cookies);
+        $cookies->set('token', [
+            'value' => null,
+            'expires' => -36000,
+            'path' => '/',
+        ]);
+        return $response->withRedirect($this->container->get('router')->pathFor('adminLogin'))->withHeader('Set-Cookie', $cookies->toHeaders());
+    }
 }
