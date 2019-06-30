@@ -92,7 +92,7 @@ class Auth extends Base
                     $user->save();
                 }
 
-                return $response->withRedirect('/admin')->withHeader('Set-Cookie', $cookies->toHeaders());
+                return $response->withRedirect($this->container->get('router')->pathFor('admin'))->withHeader('Set-Cookie', $cookies->toHeaders());
             } else {
                 $error = '密码不正确';
             }

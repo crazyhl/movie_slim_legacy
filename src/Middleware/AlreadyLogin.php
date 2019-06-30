@@ -43,7 +43,7 @@ class AlreadyLogin extends Base
                     $_SESSION['uid'] = $loginUser->id;
                     $_SESSION['user'] = $loginUser;
                 }
-                return $response->withRedirect($referer);
+                return $response->withRedirect($this->container->get('router')->pathFor($referer));
             }
         }
         // 未登录
