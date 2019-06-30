@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 
 use App\Controller\Base;
+use Slim\Http\Cookies;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

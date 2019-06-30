@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Base;
 use App\Model\User;
+use Slim\Http\Cookies;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -21,7 +22,8 @@ class Auth extends Base
      * @param Response $response
      * @return mixed
      */
-    public function login(Request $request, Response $response){
+    public function login(Request $request, Response $response)
+    {
         $this->setTitle('后台登录');
 
         return $this->view->render($response, 'admin/login.html', [
@@ -35,8 +37,8 @@ class Auth extends Base
      * @param Response $response
      * @return mixed
      */
-    public function loginAction(Request $request, Response $response){
-
+    public function loginAction(Request $request, Response $response)
+    {
         // 接受账号密码
 //        var_dump($request->getParsedBody());
         $username = $request->getParsedBodyParam('username');
@@ -59,6 +61,7 @@ class Auth extends Base
                     $user->password = password_hash($password, PASSWORD_DEFAULT);
                     $needUpdateDb = true;
                 }
+
                 // 通过 remember 判定是否长期留存用户cookie
                 if (strtolower($isRemember) == 'on') {
                     // 长期保存把 token 放到数据库中
@@ -67,17 +70,29 @@ class Auth extends Base
                     // 一年有效期
                     $expire = time() + 86400 * 365;
                 }
-                // cookie 设置 token
-                $ivlen = openssl_cipher_iv_length(getenv('CRYPT_METHOD'));
-                $iv = openssl_random_pseudo_bytes($ivlen);
-                $ciphertext = openssl_encrypt($token, getenv('CRYPT_METHOD'), getenv('APP_KEY'), 0, $iv);
 
-                setcookie("token", $ciphertext, $expire);
+                // cookie 设置 token
+                $ivLen = openssl_cipher_iv_length(getenv('CRYPT_METHOD'));
+                $iv = openssl_random_pseudo_bytes($ivLen);
+                $cipherTextRaw = openssl_encrypt($token, getenv('CRYPT_METHOD'), getenv('APP_KEY'), OPENSSL_RAW_DATA, $iv);
+                $hmac = hash_hmac('sha256', $cipherTextRaw, getenv('APP_KEY'), true);
+                $cipherText = base64_encode($iv . $hmac . $cipherTextRaw);
+
+                $cookies = new Cookies();
+                $cookies->set('token', [
+                    'value' => $cipherText,
+                    'expires' => $expire,
+                    'path' => '/',
+                ]);
+
+                $_SESSION['uid'] = $user->id;
+                $_SESSION['user'] = $user;
+
                 if ($needUpdateDb) {
                     $user->save();
                 }
 
-                return $response->withRedirect('/admin');
+                return $response->withRedirect('/admin')->withHeader('Set-Cookie', $cookies->toHeaders());
             } else {
                 $error = '密码不正确';
             }
