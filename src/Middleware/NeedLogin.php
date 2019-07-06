@@ -4,6 +4,7 @@
 namespace App\Middleware;
 
 
+use App\CustomTrait\CheckIsLogin;
 use App\Model\User;
 use Slim\Http\Cookies;
 use Slim\Http\Request;
@@ -11,6 +12,7 @@ use Slim\Http\Response;
 
 class NeedLogin extends Base
 {
+    use CheckIsLogin;
     /**
      * Example middleware invokable class
      *
@@ -22,13 +24,11 @@ class NeedLogin extends Base
      */
     public function __invoke($request, $response, $next)
     {
-        $header = $request->getHeader('cookie');
-        $cookies = Cookies::parseHeader($header);
-
-        if (empty($cookies['token'])) {
-            // 未登录
+        if (!$this->isLogin($request)) {
             return $response->withRedirect($this->container->get('router')->pathFor('adminLogin'));
         }
+
+        // 如果有token 还需要跟 session 对比啥的
         // 已登录
         $response = $next($request, $response);
 
