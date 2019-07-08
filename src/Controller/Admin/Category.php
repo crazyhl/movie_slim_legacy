@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 
 
 use App\Controller\Base;
-use Slim\Http\Cookies;
+use App\Model\Category as CategoryModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -19,6 +19,7 @@ class Category extends Base
      */
     public function index(Request $request, Response $response)
     {
+        CategoryModel::skip(0)->take(3)->get();
         $this->setTitle('分类管理');
         return $this->view->render($response, 'admin/category/index.html');
     }
