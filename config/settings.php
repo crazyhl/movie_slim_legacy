@@ -25,6 +25,9 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
 
+        // 路由缓存 正式发版的时候在添加这个
+//        'routerCacheFile' => __DIR__ . '/../caches/route.cache',
+
         'db' => [
             'driver' => 'mysql',
             'host' => 'mysql',

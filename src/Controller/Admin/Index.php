@@ -14,6 +14,7 @@ class Index extends Base
     public function index(Request $request, Response $response, $args)
     {
         // Render index view
-        return $this->view->render($response, 'index.html', $args);
+        $this->setTitle('后台管理首页');
+        return $this->view->render($response, 'admin/index.html', $args);
     }
 }

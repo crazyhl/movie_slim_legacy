@@ -39,6 +39,7 @@ class Base
      */
     public function setTitle($title, $withSuffix = true) {
         $this->container->view['title'] = $title . ($withSuffix ? ' - ' . getenv('NAME') : '');
+        $this->container->view['baseTitle'] = getenv('NAME');
         return $this;
     }
 }

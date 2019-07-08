@@ -1,6 +1,7 @@
 <?php
 
 use App\Controller\Admin\Auth;
+use App\Controller\Admin\Category;
 use App\Controller\Index;
 use App\Middleware\AlreadyLogin;
 use App\Middleware\NeedLogin;
@@ -14,14 +15,10 @@ return function (App $app) {
     $app->get('/admin/login', Auth::class . ':login')->setName('adminLogin')->add(new AlreadyLogin($container));
     $app->post('/admin/login', Auth::class . ':loginAction')->setName('adminLoginAction');
 
-    $app->group('', function (App $app) {
-        $app->get('/admin', AdminIndex::class . ':index')->setName('admin');
-        $app->get('/admin/index', AdminIndex::class . ':index')->setName('adminIndex');
-        $app->get('/admin/logout', Auth::class . ':logout')->setName('adminLogout');
+    $app->group('/admin', function (App $app) {
+        $app->get('', AdminIndex::class . ':index')->setName('admin');
+        $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');
+        $app->get('/logout', Auth::class . ':logout')->setName('adminLogout');
+        $app->get('/category', Category::class . ':index')->setName('adminCategory');
     })->add(new NeedLogin($container));
-
-    $app->get('/[{name}]', Index::class . ':index')->setName('fromIndex');
-
-
-
 };
