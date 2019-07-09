@@ -80,6 +80,14 @@
                     </div>
                 </div>
             </div>
+            <ul>
+                {% for user in users.data %}
+                <li>{{ user.name}}</li>
+                {% endfor %}
+            </ul>
+            {{users.totalPage}}
+            {{users.currentPage}}
+            {{users|json_encode()}}
         </div><!-- /.row -->
     </div>
 
