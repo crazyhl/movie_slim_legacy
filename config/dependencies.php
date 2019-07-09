@@ -1,8 +1,13 @@
 <?php
 
+use App\Twig\Extension\Paginate;
 use Illuminate\Database\Capsule\Manager;
+use Monolog\Handler\StreamHandler;
+use Monolog\Processor\UidProcessor;
 use Slim\App;
+use Slim\Http\Environment;
 use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 
 return function (App $app) {
     $container = $app->getContainer();
@@ -17,8 +22,10 @@ return function (App $app) {
 
         // Instantiate and add Slim specific extension
         $router = $c->get('router');
-        $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
-        $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+        $uri = \Slim\Http\Uri::createFromEnvironment(new Environment($_SERVER));
+        $view->addExtension(new TwigExtension($router, $uri));
+        // 注入自己的扩展
+        $view->addExtension(new Paginate());
 
         return $view;
     };
@@ -27,8 +34,8 @@ return function (App $app) {
     $container['logger'] = function ($c) {
         $settings = $c->get('settings')['logger'];
         $logger = new \Monolog\Logger($settings['name']);
-        $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
-        $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+        $logger->pushProcessor(new UidProcessor());
+        $logger->pushHandler(new StreamHandler($settings['path'], $settings['level']));
         return $logger;
     };
 
