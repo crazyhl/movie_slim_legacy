@@ -19,8 +19,11 @@ class Category extends Base
      */
     public function index(Request $request, Response $response)
     {
-        CategoryModel::skip(0)->take(3)->get();
-        $this->setTitle('分类管理');
-        return $this->view->render($response, 'admin/category/index.html');
+        $this->container->db->connection()->enableQueryLog();
+        CategoryModel::where('status', 1)->get();
+//        $this->setTitle('分类管理');
+//        return $this->view->render($response, 'admin/category/index.html');
+        $log = $this->container->db->connection()->getQueryLog();
+        var_dump($log);
     }
 }
