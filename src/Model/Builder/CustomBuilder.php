@@ -21,7 +21,7 @@ class CustomBuilder extends Builder
 
         $totalPage = $total ? ceil($total / $page) : 0;
 
-        return (object)[
+        return [
             'currentPage' => $page,
             'perPage' => $perPage,
             'totalCount' => $total,

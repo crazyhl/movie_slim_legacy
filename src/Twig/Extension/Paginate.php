@@ -22,7 +22,6 @@ class Paginate extends AbstractExtension
 
     public function links(Environment $env,  $data, $template = 'paginate/links.html')
     {
-        $number = $data->totalPage;
-        return $env->load($template)->render(compact('number'));
+        return $env->load($template)->display(compact('data'));
     }
 }
