@@ -20,7 +20,9 @@ class Category extends Base
     public function index(Request $request, Response $response)
     {
         $this->container->db->connection()->enableQueryLog();
-        CategoryModel::where('status', 1)->get();
+        CategoryModel::where('is_show', 1)->get();
+        CategoryModel::where('is_show', 2)->get();
+        CategoryModel::where('is_show', 3)->get();
 //        $this->setTitle('分类管理');
 //        return $this->view->render($response, 'admin/category/index.html');
         $log = $this->container->db->connection()->getQueryLog();
