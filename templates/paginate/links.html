@@ -1,11 +1,19 @@
 <div>
     <ul class="pagination pagination-sm m-0">
-        <li class="page-item disabled"><a class="page-link" href="#">共有 {{data['totalPage']}} 页</a></li>
-        <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+        <li class="page-item disabled"><a class="page-link" href="#">共 {{data['totalCount']}} 条 {{data['totalPage']}} 页</a></li>
+        {% if data['currentPage'] > 3 %}
+        <li class="page-item {% if data['currentPage'] == 1 %}disabled{% endif %}"><a class="page-link" href="#">首页</a></li>
+        {% endif %}
+        <li class="page-item {% if data['currentPage'] == 1 %}disabled{% endif %}"><a class="page-link" href="#">&laquo;</a></li>
         <li class="page-item"><a class="page-link" href="#">1</a></li>
         <li class="page-item"><a class="page-link" href="#">2</a></li>
         <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+        <li class="page-item"><a class="page-link" href="#">4</a></li>
+        <li class="page-item"><a class="page-link" href="#">5</a></li>
+        <li class="page-item {% if data['currentPage'] == data['totalPage'] %}disabled{% endif %}"><a class="page-link" href="#">&raquo;</a></li>
+        {% if data['totalPage'] - data['currentPage'] > 2 %}
+        <li class="page-item {% if data['currentPage'] == data['totalPage'] %}disabled{% endif %}"><a class="page-link" href="#">末页</a></li>
+        {% endif %}
     </ul>
 
 </div>
