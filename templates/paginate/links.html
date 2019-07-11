@@ -4,16 +4,25 @@
         {% if data['currentPage'] > 3 %}
         <li class="page-item {% if data['currentPage'] == 1 %}disabled{% endif %}"><a class="page-link" href="#">首页</a></li>
         {% endif %}
+        {% set totalCount = eachSideCount * 2 + 1 %}
+        {% set leftCount = eachSideCount %}
+        {% set rightCount = eachSideCount %}
+
+        {% if data['currentPage'] < eachSideCount %}
+            {% set leftCount = eachSideCount * 2 + 1 %}
+        {% endif %}
+
         <li class="page-item {% if data['currentPage'] == 1 %}disabled{% endif %}"><a class="page-link" href="#">&laquo;</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">4</a></li>
-        <li class="page-item"><a class="page-link" href="#">5</a></li>
+<!--        <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--        <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+<!--        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--        <li class="page-item"><a class="page-link" href="#">4</a></li>-->
+<!--        <li class="page-item"><a class="page-link" href="#">5</a></li>-->
+
+        {{generateLinkItem(data['currentPage'], data['totalPage'], data['path'])}}
         <li class="page-item {% if data['currentPage'] == data['totalPage'] %}disabled{% endif %}"><a class="page-link" href="#">&raquo;</a></li>
         {% if data['totalPage'] - data['currentPage'] > 2 %}
         <li class="page-item {% if data['currentPage'] == data['totalPage'] %}disabled{% endif %}"><a class="page-link" href="#">末页</a></li>
         {% endif %}
     </ul>
-
 </div>

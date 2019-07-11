@@ -41,7 +41,7 @@ class Paginate
      * 获取 basePath
      * @return string
      */
-    public function getBasePath()
+    public static function getBasePath()
     {
         $container = Val::getInstance()['container'];
 
@@ -53,7 +53,7 @@ class Paginate
         return $request->getUri()->getPath();
     }
 
-    public function getQueryParams()
+    public static function getQueryParams()
     {
         $container = Val::getInstance()['container'];
         /**

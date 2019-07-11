@@ -25,7 +25,6 @@ class Category extends Base
 //        $log = $this->container->db->connection()->getQueryLog();
         $users['totalPage'] = 15;
         $users['totalCount'] = 3000;
-        $users['currentPage'] = 13;
         return $this->view->render($response, 'admin/category/index.html', [
             'users' => $users,
         ]);

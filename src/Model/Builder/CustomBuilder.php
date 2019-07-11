@@ -19,6 +19,14 @@ class CustomBuilder extends Builder
 
         $totalPage = $total ? ceil($total / $page) : 0;
 
+        $path = $basePath = Paginate::getBasePath();
+        $queryParams = Paginate::getQueryParams();
+        unset($queryParams['page']);
+
+        $queryStr = http_build_query($queryParams);
+        if ($queryStr) {
+            $path .= '?' . $queryStr;
+        }
 
         return [
             'currentPage' => $page,
@@ -26,6 +34,9 @@ class CustomBuilder extends Builder
             'totalCount' => $total,
             'totalPage' => $totalPage,
             'data' => $results,
+            'basePath' => $basePath,
+            'queryStr' => $queryStr,
+            'path' => $path,
         ];
     }
 }
