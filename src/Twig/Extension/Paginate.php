@@ -23,6 +23,7 @@ class Paginate extends AbstractExtension
 
     public function links(Environment $env, $data, $eachSideCount = 2, $template = 'paginate/links.html')
     {
+
         $env->load($template)->display(compact('data', 'eachSideCount'));
     }
 
@@ -46,10 +47,15 @@ class Paginate extends AbstractExtension
             }
         }
         $links = [];
+
+        if ($currentPage < $currentPage + 1) {
+
+        }
+
         for ($i = $start; $i <= $end; $i++) {
             $links[] = [
                 'name' => $i,
-                'url' => $path . '&' . $pageName . '=' . $i,
+                'url' => $path . (stripos('?', $path) ? '&' : '?') . $pageName . '=' . $i,
                 'isDisabled' => false,
                 'isActive' => ($i == $currentPage) ? true : false,
             ];
