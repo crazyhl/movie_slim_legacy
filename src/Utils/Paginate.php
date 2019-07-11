@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Utils;
 
 use Slim\Http\Request;
@@ -32,5 +33,34 @@ class Paginate
         }
 
         return intval($page);
+    }
+
+
+
+    /**
+     * 获取 basePath
+     * @return string
+     */
+    public function getBasePath()
+    {
+        $container = Val::getInstance()['container'];
+
+        /**
+         * @var $request Request
+         */
+        $request = $container->request;
+
+        return $request->getUri()->getPath();
+    }
+
+    public function getQueryParams()
+    {
+        $container = Val::getInstance()['container'];
+        /**
+         * @var $request Request
+         */
+        $request = $container->request;
+
+        return $request->getQueryParams();
     }
 }

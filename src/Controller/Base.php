@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Controller;
-
 
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
@@ -37,9 +35,11 @@ class Base
      * @param bool $withSuffix 是否带有后缀 就是 xxx - NAME 这种形式
      * @return $this
      */
-    public function setTitle($title, $withSuffix = true) {
+    public function setTitle($title, $withSuffix = true)
+    {
         $this->container->view['title'] = $title . ($withSuffix ? ' - ' . getenv('NAME') : '');
         $this->container->view['baseTitle'] = getenv('NAME');
         return $this;
     }
+
 }

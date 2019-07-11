@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Model\Builder;
-
 
 use App\Utils\Paginate;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +18,7 @@ class CustomBuilder extends Builder
             : $this->model->newCollection();
 
         $totalPage = $total ? ceil($total / $page) : 0;
+
 
         return [
             'currentPage' => $page,
