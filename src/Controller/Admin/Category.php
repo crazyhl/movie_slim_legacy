@@ -23,7 +23,7 @@ class Category extends Base
         $users = CategoryModel::myPaginate(15);
         $this->setTitle('分类管理');
 //        $log = $this->container->db->connection()->getQueryLog();
-        $users['totalPage'] = 15;
+        $users['totalPage'] = 17;
         $users['totalCount'] = 3000;
         return $this->view->render($response, 'admin/category/index.html', [
             'users' => $users,

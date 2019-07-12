@@ -1,5 +1,0 @@
-{% for link in links %}
-<li class="page-item{% if link['isDisabled'] %} disabled{% endif %}{% if link['isActive'] %} active{% endif %}">
-    <a class="page-link" href="{{link['url']}}">{{link['name']}}</a>
-</li>
-{% endfor %}
