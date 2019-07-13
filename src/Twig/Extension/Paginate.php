@@ -21,16 +21,16 @@ class Paginate extends AbstractExtension
         ];
     }
 
-    public function links(Environment $env, $data, $showTotal = true, $eachSideCount = 2, $pageName = 'page', $template = 'paginate/links.html')
+    public function links(Environment $env, $data, $showTotal = true, $extraClass='', $eachSideCount = 2, $pageName = 'page', $template = 'paginate/links.html')
     {
         $links = $this->generateLinkItem($data['currentPage'], $data['totalPage'], $data['path'], $eachSideCount, $pageName);
-        $env->load($template)->display(compact('data', 'links', 'showTotal'));
+        $env->load($template)->display(compact('data', 'links', 'showTotal', 'extraClass'));
     }
 
-    public function links2(Environment $env, $data, $showTotal = true, $eachSideCount = 3, $pageName = 'page', $template = 'paginate/links.html')
+    public function links2(Environment $env, $data, $showTotal = true, $extraClass='', $eachSideCount = 3, $pageName = 'page', $template = 'paginate/links.html')
     {
         $links = $this->generateLinkItem2($data['currentPage'], $data['totalPage'], $data['path'], $eachSideCount, $pageName);
-        $env->load($template)->display(compact('data', 'links'));
+        $env->load($template)->display(compact('data', 'links', 'showTotal', 'extraClass'));
     }
 
     private function generateLinkItem($currentPage, $totalPage, $path, $eachSideCount = 2, $pageName = 'page')
