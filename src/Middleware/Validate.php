@@ -11,6 +11,7 @@ namespace App\Middleware;
 
 use App\Controller\User;
 use App\Utils\JWT;
+use App\Utils\Old;
 use App\Validator\AbstractValidator;
 use Jose\Component\Core\Converter\StandardConverter;
 use Slim\Container;
@@ -57,10 +58,7 @@ class Validate
         if ($result) {
             $response = $next($request, $response);
         } else {
-            $old = $request->getQueryParams();
-            if ($request->getMethod() == 'POST') {
-                $old += ($request->getParsedBody() ?: []);
-            }
+            $old = Old::get();
 
             $flashMessage  =$this->container->flash;
             $flashMessage->addMessage('error', $message);

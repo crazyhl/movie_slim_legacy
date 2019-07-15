@@ -3,6 +3,7 @@
 
 namespace App\Validator;
 
+use Closure;
 use Slim\Http\Request;
 
 /**
@@ -153,39 +154,53 @@ abstract class AbstractValidator
 
             if (array_key_exists('min', $fieldRule)) {
                 if (($minFunction && $minFunction($value) < $fieldRule['min']) || $value < $fieldRule['min']) {
-                    return [false, $fieldRule[$fieldType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能小于' . $fieldRule['min']];
+                    $messageType = 'min';
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能小于' . $fieldRule['min']];
                 }
             }
 
             if (array_key_exists('max', $fieldRule)) {
                 if (($maxFunction && $maxFunction($value) > $fieldRule['max']) || $value > $fieldRule['max']) {
-                    return [false, $fieldRule[$fieldType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能大于' . $fieldRule['min']];
+                    $messageType = 'max';
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能大于' . $fieldRule['min']];
                 }
             }
 
             if (array_key_exists('length', $fieldRule)) {
                 if (($lengthFunction && $lengthFunction($value) !== $fieldRule['length']) || $value !== $fieldRule['length']) {
-                    return [false, $fieldRule[$fieldType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不正确'];
+                    $messageType = 'length';
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不正确'];
                 }
             }
 
             if (array_key_exists('list', $fieldRule)) {
                 if (!$listFunction($value, $fieldRule['list'], true)) {
-                    return [false, $fieldRule[$fieldType . 'Message'] ?: $messageFieldName . '范围不正确'];
+                    $messageType = 'list';
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . '范围不正确'];
                 }
             }
 
             if (array_key_exists('between', $fieldRule)) {
+                $messageType = 'between';
+
                 $valueArr = explode(':', $fieldRule['between']);
                 $min = $valueArr[0] ?: null;
                 $max = $valueArr[1] ?: null;
 
                 if ($min !== null && (($betweenFunction && $betweenFunction($value) < $fieldRule['min']) || $value < $fieldRule['min'])) {
-                    return [false, $fieldRule[$fieldType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能小于' . $fieldRule['min']];
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能小于' . $fieldRule['min']];
                 }
 
                 if ($max !== null && (($betweenFunction && $betweenFunction($value) > $fieldRule['max']) || $value > $fieldRule['max'])) {
-                    return [false, $fieldRule[$fieldType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能大于' . $fieldRule['min']];
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能大于' . $fieldRule['min']];
+                }
+            }
+
+            if (array_key_exists('function', $fieldRule) && $fieldRule['function'] instanceof Closure) {
+                $functionResult = $fieldRule['function']($value);
+                if ($functionResult === false) {
+                    $messageType = 'function';
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . '自定义验证失败'];
                 }
             }
         }
