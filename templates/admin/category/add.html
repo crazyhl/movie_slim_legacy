@@ -24,11 +24,12 @@
                             <div class="form-group">
                                 <label>名称</label>
                                 <input type="text" class="form-control" name="name" placeholder="名称"
-                                       value="{{category['name'] ? category['name'] : (old('name') ? old('name') : '')}}">
+                                       value="{{defaultExtra(category['name'], defaultExtra(old('name')))}}">
                             </div>
                             <div class="form-group">
                                 <label>别名(英文)</label>
-                                <input type="text" class="form-control" name="slug" placeholder="别名(英文)">
+                                <input type="text" class="form-control" name="slug" placeholder="别名(英文)"
+                                       value="{{defaultExtra(category['slug'], defaultExtra(old('slug')))}}">
                             </div>
                             <!-- select -->
                             <div class="form-group">
@@ -36,27 +37,35 @@
                                 <select name="parent_id" class="form-control">
                                     <option value="0">无</option>
                                     {% for c in categories %}
-                                    <option value="{{c['id']}}">{{c['name']}}</option>
+                                    <option value="{{c['id']}}"
+                                            {% if defaultExtra(category[
+                                    'parent_id'], defaultExtra(old('parent_id'), 0)) == c['id']
+                                    %}selected{% endif %}>{{c['name']}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
 
                             <!-- radio -->
                             <div class="form-group">
-                                <label>是否外显</label>
+                                <label>是否外显{{old('is_show')}}</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="is_show" value="1">
+                                    <input class="form-check-input" type="radio" name="is_show" value="1"
+                                           {% if defaultExtra(category['is_show'], defaultExtra(old('is_show'), 1)) == 1
+                                    %}checked{% endif %}>
                                     <label class="form-check-label">是</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="is_show" value="0">
+                                    <input class="form-check-input" type="radio" name="is_show" value="0"
+                                           {% if defaultExtra(category['is_show'], defaultExtra(old('is_show'), 1)) == 0
+                                    %}checked{% endif %}>
                                     <label class="form-check-label">否</label>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>排序</label>
-                                <input type="text" class="form-control" name="order" placeholder="0" value="0">
+                                <label>排序{{old('order')}}</label>
+                                <input type="text" class="form-control" name="order" placeholder="0"
+                                       value="{{defaultExtra(category['order'], defaultExtra(old('order'), 0))}}">
                             </div>
                         </div>
                         <div class="card-footer">

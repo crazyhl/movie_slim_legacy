@@ -1,5 +1,6 @@
 <?php
 
+use App\Twig\Extension\DefaultExtra;
 use App\Twig\Extension\Old;
 use App\Twig\Extension\Paginate;
 use Illuminate\Database\Capsule\Manager;
@@ -29,6 +30,7 @@ return function (App $app) {
         // 注入自己的扩展
         $view->addExtension(new Paginate());
         $view->addExtension(new Old());
+        $view->addExtension(new DefaultExtra());
 
         return $view;
     };

@@ -43,7 +43,7 @@ class Old extends AbstractExtension
         if (empty($name)) {
             return $message;
         } else {
-            return $message[$name] ?: '';
+            return array_key_exists($name, $message) ? $message[$name] : '';
         }
     }
 

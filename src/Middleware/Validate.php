@@ -62,7 +62,6 @@ class Validate
                 $old += ($request->getParsedBody() ?: []);
             }
 
-//            var_dump($request->getHeader('referer'));
             $flashMessage  =$this->container->flash;
             $flashMessage->addMessage('error', $message);
             $flashMessage->addMessage('old', $old);
