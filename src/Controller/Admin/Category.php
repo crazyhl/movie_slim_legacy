@@ -8,6 +8,7 @@ use App\Controller\Base;
 use App\Model\Category as CategoryModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use App\Service\Category as CategoryService;
 
 class Category extends Base
 {
@@ -28,6 +29,18 @@ class Category extends Base
         return $this->view->render($response, 'admin/category/index.html', [
             'users' => $users,
         ]);
+
+    }
+
+    public function add(Request $request, Response $response)
+    {
+        $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
+        $categories = CategoryService::groupCategory($categories);
+        echo '<pre>';
+        var_dump($categories);
+        echo '</pre>';
+        exit();
+        return $this->view->render($response, 'admin/category/add.html', compact('categories'));
 
     }
 }

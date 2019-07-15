@@ -19,6 +19,10 @@ return function (App $app) {
         $app->get('', AdminIndex::class . ':index')->setName('admin');
         $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');
         $app->get('/logout', Auth::class . ':logout')->setName('adminLogout');
-        $app->get('/category', Category::class . ':index')->setName('adminCategory');
+        $app->group('/category', function (App $app) {
+            $app->get('', Category::class . ':index')->setName('adminCategory');
+            $app->get('/add', Category::class . ':add')->setName('adminCategoryAdd');
+
+        });
     })->add(new NeedLogin($container));
 };
