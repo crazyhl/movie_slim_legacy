@@ -5,6 +5,7 @@ namespace App\Twig\Extension;
 
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * twig 模板分页扩展
@@ -16,8 +17,8 @@ class Paginate extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new \Twig\TwigFunction('links', [$this, 'links'], ['needs_environment' => true]),
-            new \Twig\TwigFunction('links2', [$this, 'links2'], ['needs_environment' => true]),
+            new TwigFunction('links', [$this, 'links'], ['needs_environment' => true]),
+            new TwigFunction('links2', [$this, 'links2'], ['needs_environment' => true]),
         ];
     }
 

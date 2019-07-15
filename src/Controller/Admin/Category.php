@@ -36,11 +36,12 @@ class Category extends Base
     {
         $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
         $categories = CategoryService::groupCategory($categories);
-        echo '<pre>';
-        var_dump($categories);
-        echo '</pre>';
-        exit();
+        $categories = CategoryService::groupToTree($categories);
         return $this->view->render($response, 'admin/category/add.html', compact('categories'));
+    }
+
+    public function save(Request $request, Response $response)
+    {
 
     }
 }

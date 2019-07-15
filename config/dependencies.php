@@ -1,10 +1,12 @@
 <?php
 
+use App\Twig\Extension\Old;
 use App\Twig\Extension\Paginate;
 use Illuminate\Database\Capsule\Manager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\UidProcessor;
 use Slim\App;
+use Slim\Flash\Messages;
 use Slim\Http\Environment;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
@@ -26,6 +28,7 @@ return function (App $app) {
         $view->addExtension(new TwigExtension($router, $uri));
         // 注入自己的扩展
         $view->addExtension(new Paginate());
+        $view->addExtension(new Old());
 
         return $view;
     };
@@ -48,5 +51,10 @@ return function (App $app) {
         $capsule->bootEloquent();
 
         return $capsule;
+    };
+
+    // Register provider
+    $container['flash'] = function () {
+        return new Messages();
     };
 };

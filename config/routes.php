@@ -5,6 +5,8 @@ use App\Controller\Admin\Category;
 use App\Controller\Index;
 use App\Middleware\AlreadyLogin;
 use App\Middleware\NeedLogin;
+use App\Middleware\Validate;
+use App\Validator\AddCategoryValidator;
 use Slim\App;
 use App\Controller\Admin\Index as AdminIndex;
 
@@ -20,8 +22,11 @@ return function (App $app) {
         $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');
         $app->get('/logout', Auth::class . ':logout')->setName('adminLogout');
         $app->group('/category', function (App $app) {
+            $container = $app->getContainer();
             $app->get('', Category::class . ':index')->setName('adminCategory');
             $app->get('/add', Category::class . ':add')->setName('adminCategoryAdd');
+            $app->post('/save', Category::class . ':save')->setName('adminCategorySave')
+                ->add(new Validate($container, new AddCategoryValidator()));
 
         });
     })->add(new NeedLogin($container));
