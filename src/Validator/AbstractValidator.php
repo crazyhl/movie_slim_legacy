@@ -4,6 +4,7 @@
 namespace App\Validator;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Slim\Http\Request;
 
 /**
@@ -21,6 +22,10 @@ abstract class AbstractValidator
      * @var array
      */
     protected $extraParams;
+    /**
+     * @var Model
+     */
+    protected $model;
 
     /**
      * 保存条件的数组
@@ -42,6 +47,11 @@ abstract class AbstractValidator
         $this->extraParams = $extraParams;
 
         return $this->doValidation();
+    }
+
+    public function setModel($model)
+    {
+        $this->model = $model;
     }
 
     /**
@@ -193,6 +203,16 @@ abstract class AbstractValidator
 
                 if ($max !== null && (($betweenFunction && $betweenFunction($value) > $fieldRule['max']) || $value > $fieldRule['max'])) {
                     return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . $typeErrorMessagePrefix . '不能大于' . $fieldRule['min']];
+                }
+            }
+
+            if (array_key_exists('unique', $fieldRule) && $this->model) {
+                $queryBuildr = call_user_func_array([$this->model, 'where'], [$fieldName, '=', $value]);
+                $row = $queryBuildr->first();
+
+                if ($row) {
+                    $messageType = 'unique';
+                    return [false, $fieldRule[$messageType . 'Message'] ?: $messageFieldName . '字段必须唯一存在'];
                 }
             }
 

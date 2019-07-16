@@ -42,5 +42,6 @@ class Category extends Base
 
     public function save(Request $request, Response $response)
     {
+
     }
 }

@@ -5,8 +5,11 @@ namespace App\Validator;
 
 
 
+use App\Model\Category;
+
 class AddCategoryValidator extends AbstractValidator
 {
+    protected $model = Category::class;
 
     /**
      * 保存条件的数组
@@ -33,16 +36,17 @@ class AddCategoryValidator extends AbstractValidator
                 'name' => '别名',
                 'require' => true,
                 'requireMessage' => '别名不能为空',
-                'function' => function ($slug) {
-                    $category = \App\Model\Category::where('slug', '=', $slug)->first();
-                    if ($category) {
-                        // 已存在就返回false
-                        return false;
-                    } else {
-                        return true;
-                    }
-                },
-                'functionMessage' => '已存在相同别名的分类',
+                'unique' => ''
+//                'function' => function ($slug) {
+//                    $category = \App\Model\Category::where('slug', '=', $slug)->first();
+//                    if ($category) {
+//                        // 已存在就返回false
+//                        return false;
+//                    } else {
+//                        return true;
+//                    }
+//                },
+//                'functionMessage' => '已存在相同别名的分类',
             ],
             'order' => [
                 'name' => '排序',
