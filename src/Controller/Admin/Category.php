@@ -21,7 +21,11 @@ class Category extends Base
     public function index(Request $request, Response $response)
     {
 //        $this->container->db->connection()->enableQueryLog();
-        $users = CategoryModel::myPaginate(15);
+        $users = CategoryModel::with(['parent', 'childList'])->myPaginate(15);
+        echo '<pre>';
+        var_dump($users['data']->toArray());
+        echo '</pre>';
+        exit();
         $this->setTitle('分类管理');
 //        $log = $this->container->db->connection()->getQueryLog();
         $users['totalPage'] = 17;
@@ -42,6 +46,15 @@ class Category extends Base
 
     public function save(Request $request, Response $response)
     {
+        $category = new CategoryModel();
+        $category->name = $request->getParsedBodyParam('name');
+        $category->slug = $request->getParsedBodyParam('slug');
+        $category->parent_id = $request->getParsedBodyParam('parent_id');
+        $category->is_show = $request->getParsedBodyParam('is_show');
+        $category->order = $request->getParsedBodyParam('order');
 
+        $category->save();
+
+        return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
     }
 }
