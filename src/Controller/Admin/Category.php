@@ -20,15 +20,45 @@ class Category extends Base
      */
     public function index(Request $request, Response $response)
     {
-//        $this->container->db->connection()->enableQueryLog();
-        $categories = CategoryModel::with(['parent'])->myPaginate(3);
-        echo '<pre>';
-        var_dump($categories['data']->toArray());
-        echo '</pre>';
-        exit();
+        $this->container->db->connection()->enableQueryLog();
+        // 父分类id
+        $parentId = $request->getQueryParam('parentId', -1);
+
+        $categoryQuery = CategoryModel::with(['parent']);
+
+        $breadcrumb = [];
+
+        if ($parentId >= 0) {
+            $categoryQuery->where('parent_id', '=', $parentId);
+            $category = CategoryModel::find($parentId);
+            array_unshift($breadcrumb, [
+                'name' => $category->name,
+                'url' => $this->router->pathFor('adminCategory',[], ['parentId' => $category->id]),
+                'current' => true,
+            ]);
+            while ($category->parent_id > 0) {
+                array_unshift($breadcrumb, [
+                    'name' => $category->parent->name,
+                    'url' => $this->router->pathFor('adminCategory',[], ['parentId' => $category->parent->id]),
+                    'current' => false,
+                ]);
+                $category = $category->parent;
+            }
+        }
+
+        array_unshift($breadcrumb, [
+            'name' => '全部分类',
+            'url' => $this->router->pathFor('adminCategory'),
+            'current' => count($breadcrumb) == 0 ? true : false,
+        ]);
+
+        $categories = $categoryQuery->myPaginate(3);
+
         $this->setTitle('分类管理');
-//        $log = $this->container->db->connection()->getQueryLog();
-        return $this->view->render($response, 'admin/category/index.html', compact('categories'));
+        $log = $this->container->db->connection()->getQueryLog();
+        // 生成面包屑导航
+
+        return $this->view->render($response, 'admin/category/index.html', compact('categories', 'breadcrumb'));
 
     }
 

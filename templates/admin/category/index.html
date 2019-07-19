@@ -10,9 +10,23 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
+
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">分类列表</h3>
+                        <h3 class="card-title">
+                            分类列表:&nbsp;
+                            <nav aria-label="breadcrumb" class="d-inline-block small">
+                                <ol class="bg-transparent breadcrumb mb-0 p-0">
+                                    {% for item in breadcrumb %}
+                                    {% if item.current == true %}
+                                    <li class="breadcrumb-item active" aria-current="page">{{item.name}}</li>
+                                    {% else %}
+                                    <li class="breadcrumb-item"><a href="{{item.url}}">{{item.name}}</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ol>
+                            </nav>
+                        </h3>
                         <div class="card-tools">
                             <a class="btn btn-outline-info btn-sm" href="{{path_for('adminCategoryAdd')}}">添加分类</a>
                         </div>
@@ -26,13 +40,12 @@
                                 <th>外显</th>
                                 <th>排序</th>
                                 <th>时间</th>
-                                <th style="width: 160px">操作</th>
+                                <th>操作</th>
                             </tr>
                             {% for category in categories.data %}
                             <tr>
                                 <td>
-                                    名称: {{category.name}} <br />
-                                    slug: <span class="small">{{category.slug}}</span>
+                                    {{category.name}} <span class="small">({{category.slug}})</span>
                                 </td>
                                 <td>
                                     {% if category.parent_id == 0 %}
@@ -47,8 +60,17 @@
                                 <td>
                                     {{category.order}}
                                 </td>
-                                <td>{{category.create_date}}</td>
-                                <td><span class="badge bg-danger">55%</span></td>
+                                <td>
+                                    <span class="small">
+                                    C:{{category.create_date}}
+                                    U:{{category.update_date}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ path_for('adminCategory', {}, {'parentId':category.id}) }}" class="badge badge-light">查看子分类</a>
+                                    <a href="#" class="badge badge-primary">编辑</a>
+                                    <a href="#" class="badge badge-danger">查看子分类</a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </table>
@@ -61,7 +83,6 @@
             </div>
         </div><!-- /.row -->
     </div>
-
 </section>
 
 {% endblock %}

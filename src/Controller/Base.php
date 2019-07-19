@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Psr\Container\ContainerInterface;
+use Slim\Router;
 use Slim\Views\Twig;
 
 class Base
@@ -15,6 +16,10 @@ class Base
      * @var Twig
      */
     protected $view;
+    /**
+     * @var Router
+     */
+    protected $router;
 
     public function __construct(ContainerInterface $container)
     {
@@ -27,6 +32,7 @@ class Base
         $this->container->view['website'] = getenv('WEBSITE');
         // 把 view 放到 controller 里面
         $this->view = $this->container->view;
+        $this->router = $this->container->router;
     }
 
     /**
