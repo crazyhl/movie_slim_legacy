@@ -1,5 +1,6 @@
 <?php
 
+use App\Twig\Extension\Breadcrumb;
 use App\Twig\Extension\DefaultExtra;
 use App\Twig\Extension\Old;
 use App\Twig\Extension\Paginate;
@@ -31,6 +32,7 @@ return function (App $app) {
         $view->addExtension(new Paginate());
         $view->addExtension(new Old());
         $view->addExtension(new DefaultExtra());
+        $view->addExtension(new Breadcrumb());
 
         return $view;
     };

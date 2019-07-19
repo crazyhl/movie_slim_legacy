@@ -15,17 +15,7 @@
                     <div class="card-header">
                         <h3 class="card-title">
                             分类列表:&nbsp;
-                            <nav aria-label="breadcrumb" class="d-inline-block small">
-                                <ol class="bg-transparent breadcrumb mb-0 p-0">
-                                    {% for item in breadcrumb %}
-                                    {% if item.current == true %}
-                                    <li class="breadcrumb-item active" aria-current="page">{{item.name}}</li>
-                                    {% else %}
-                                    <li class="breadcrumb-item"><a href="{{item.url}}">{{item.name}}</a></li>
-                                    {% endif %}
-                                    {% endfor %}
-                                </ol>
-                            </nav>
+                            {{breadcrumb(breadcrumb, 'd-inline-block small', 'mb-0 p-0')}}
                         </h3>
                         <div class="card-tools">
                             <a class="btn btn-outline-info btn-sm" href="{{path_for('adminCategoryAdd')}}">添加分类</a>
