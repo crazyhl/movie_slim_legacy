@@ -21,18 +21,14 @@ class Category extends Base
     public function index(Request $request, Response $response)
     {
 //        $this->container->db->connection()->enableQueryLog();
-        $users = CategoryModel::with(['parent', 'childList'])->myPaginate(15);
+        $categories = CategoryModel::with(['parent'])->myPaginate(3);
         echo '<pre>';
-        var_dump($users['data']->toArray());
+        var_dump($categories['data']->toArray());
         echo '</pre>';
         exit();
         $this->setTitle('分类管理');
 //        $log = $this->container->db->connection()->getQueryLog();
-        $users['totalPage'] = 17;
-        $users['totalCount'] = 3000;
-        return $this->view->render($response, 'admin/category/index.html', [
-            'users' => $users,
-        ]);
+        return $this->view->render($response, 'admin/category/index.html', compact('categories'));
 
     }
 

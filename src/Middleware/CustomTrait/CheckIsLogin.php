@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\CustomTrait;
+namespace App\Middleware\CustomTrait;
 
 
 use App\Model\User;

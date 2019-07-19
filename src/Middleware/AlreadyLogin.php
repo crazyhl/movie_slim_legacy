@@ -4,9 +4,7 @@
 namespace App\Middleware;
 
 
-use App\CustomTrait\CheckIsLogin;
-use App\Model\User;
-use Slim\Http\Cookies;
+use App\Middleware\CustomTrait\CheckIsLogin;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

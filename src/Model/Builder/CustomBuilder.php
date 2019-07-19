@@ -17,7 +17,7 @@ class CustomBuilder extends Builder
             ? $this->forPage($page, $perPage)->get($columns)
             : $this->model->newCollection();
 
-        $totalPage = $total ? ceil($total / $page) : 0;
+        $totalPage = $total ? ceil($total / $perPage) : 0;
 
         $path = $basePath = Paginate::getBasePath();
         $queryParams = Paginate::getQueryParams();

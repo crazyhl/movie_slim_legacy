@@ -21,67 +21,44 @@
                     <div class="card-body">
                         <table class="table table-bordered table-striped">
                             <tr>
-                                <th style="width: 10px">#</th>
-                                <th>Task</th>
-                                <th>Progress</th>
-                                <th style="width: 40px">Label</th>
+                                <th>名称</th>
+                                <th>父分类</th>
+                                <th>外显</th>
+                                <th>排序</th>
+                                <th>时间</th>
+                                <th style="width: 160px">操作</th>
                             </tr>
+                            {% for category in categories.data %}
                             <tr>
-                                <td>1.</td>
-                                <td>Update software</td>
                                 <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                    </div>
+                                    名称: {{category.name}} <br />
+                                    slug: <span class="small">{{category.slug}}</span>
                                 </td>
+                                <td>
+                                    {% if category.parent_id == 0 %}
+                                    无
+                                    {% else %}
+                                    {{category.parent.name}}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{category.is_show ? '是' : '否'}}
+                                </td>
+                                <td>
+                                    {{category.order}}
+                                </td>
+                                <td>{{category.create_date}}</td>
                                 <td><span class="badge bg-danger">55%</span></td>
                             </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>Clean database</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar bg-warning" style="width: 70%"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-warning">70%</span></td>
-                            </tr>
-                            <tr>
-                                <td>3.</td>
-                                <td>Cron job running</td>
-                                <td>
-                                    <div class="progress progress-xs progress-striped active">
-                                        <div class="progress-bar bg-primary" style="width: 30%"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-primary">30%</span></td>
-                            </tr>
-                            <tr>
-                                <td>4.</td>
-                                <td>Fix and squish bugs</td>
-                                <td>
-                                    <div class="progress progress-xs progress-striped active">
-                                        <div class="progress-bar bg-success" style="width: 90%"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge bg-success">90%</span></td>
-                            </tr>
+                            {% endfor %}
                         </table>
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer clearfix">
-                        {{links (users, false, 'float-right')}}
+                        {{links (categories, true, 'float-right')}}
                     </div>
                 </div>
             </div>
-            <ul>
-                {% for user in users.data %}
-                <li>{{ user.name}}</li>
-                {% endfor %}
-            </ul>
-            {{users.totalPage}}
-            {{users.currentPage}}
-            {{users|json_encode()}}
         </div><!-- /.row -->
     </div>
 
