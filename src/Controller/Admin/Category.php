@@ -20,7 +20,6 @@ class Category extends Base
      */
     public function index(Request $request, Response $response)
     {
-        $this->container->db->connection()->enableQueryLog();
         // 父分类id
         $parentId = $request->getQueryParam('parentId', -1);
 
@@ -33,13 +32,13 @@ class Category extends Base
             $category = CategoryModel::find($parentId);
             array_unshift($breadcrumb, [
                 'name' => $category->name,
-                'url' => $this->router->pathFor('adminCategory',[], ['parentId' => $category->id]),
+                'url' => $this->router->pathFor('adminCategory', [], ['parentId' => $category->id]),
                 'current' => true,
             ]);
             while ($category->parent_id > 0) {
                 array_unshift($breadcrumb, [
                     'name' => $category->parent->name,
-                    'url' => $this->router->pathFor('adminCategory',[], ['parentId' => $category->parent->id]),
+                    'url' => $this->router->pathFor('adminCategory', [], ['parentId' => $category->parent->id]),
                     'current' => false,
                 ]);
                 $category = $category->parent;
@@ -55,11 +54,12 @@ class Category extends Base
         $categories = $categoryQuery->myPaginate(3);
 
         $this->setTitle('分类管理');
-        $log = $this->container->db->connection()->getQueryLog();
         // 生成面包屑导航
 
-        return $this->view->render($response, 'admin/category/index.html', compact('categories', 'breadcrumb'));
-
+//        return $this->view->render($response, 'admin/category/index.html',
+//            compact('categories', 'breadcrumb', 'parentId'));
+        return $this->display($response, 'admin/category/index.html'
+            , compact('categories', 'breadcrumb', 'parentId'));
     }
 
     public function add(Request $request, Response $response)
