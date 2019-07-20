@@ -3,9 +3,6 @@
 
 namespace App\Model;
 
-
-use App\Model\CustomTrait\DateTime;
-
 class Category extends Base
 {
     protected $table = 'category';
