@@ -59,7 +59,7 @@
                                 </td>
                                 <td>
                                     <a href="{{ path_for('adminCategory', {}, {'parentId':category.id}) }}" class="badge badge-light">查看子分类</a>
-                                    <a href="#" class="badge badge-primary">编辑</a>
+                                    <a href="{{ path_for('adminCategoryEdit', {}, {'id':category.id}) }}" class="badge badge-primary">编辑</a>
                                     <a href="#" class="badge badge-danger">查看子分类</a>
                                 </td>
                             </tr>

@@ -7,6 +7,7 @@ use App\Middleware\AlreadyLogin;
 use App\Middleware\NeedLogin;
 use App\Middleware\Validate;
 use App\Validator\AddCategoryValidator;
+use App\Validator\EditCategoryValidator;
 use Slim\App;
 use App\Controller\Admin\Index as AdminIndex;
 
@@ -25,9 +26,11 @@ return function (App $app) {
             $container = $app->getContainer();
             $app->get('', Category::class . ':index')->setName('adminCategory');
             $app->get('/add', Category::class . ':add')->setName('adminCategoryAdd');
+            $app->get('/edit', Category::class . ':edit')->setName('adminCategoryEdit');
             $app->post('/save', Category::class . ':save')->setName('adminCategorySave')
                 ->add(new Validate($container, new AddCategoryValidator()));
 
-        });
+            $app->post('/update', Category::class . ':update')->setName('adminCategoryUpdate')
+                ->add(new Validate($container, new EditCategoryValidator())); });
     })->add(new NeedLogin($container));
 };

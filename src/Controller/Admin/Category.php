@@ -87,4 +87,35 @@ class Category extends Base
 
         return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
     }
+
+    public function edit(Request $request, Response $response)
+    {
+        $categoryId = $request->getQueryParam('id', 0);
+        // 如果分类id为空就跳转到新增
+        if ($categoryId == 0) {
+            return $response->withRedirect($this->container->router->pathFor('adminCategoryAdd'), 200);
+        }
+        $category = CategoryModel::find($categoryId);
+        return $this->display($response, 'admin/category/edit.html'
+            , compact('category'));
+    }
+
+    public function update(Request $request, Response $response)
+    {
+        $categoryId = $request->getParsedBodyParam('id', 0);
+        if ($categoryId != 0) {
+            $category = CategoryModel::find($categoryId);
+
+            $category->name = $request->getParsedBodyParam('name');
+            $category->slug = $request->getParsedBodyParam('slug');
+            $category->parent_id = $request->getParsedBodyParam('parent_id');
+            $category->is_show = $request->getParsedBodyParam('is_show');
+            $category->order = $request->getParsedBodyParam('order');
+
+            $category->save();
+        }
+
+
+        return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
+    }
 }
