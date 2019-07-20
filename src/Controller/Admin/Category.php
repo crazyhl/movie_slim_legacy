@@ -115,6 +115,13 @@ class Category extends Base
             $category->save();
         }
 
+        return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
+    }
+
+    public function delete(Request $request, Response $response)
+    {
+        $categoryId = $request->getParsedBodyParam('id', 0);
+        CategoryModel::where('id', $categoryId)->delete();
 
         return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
     }
