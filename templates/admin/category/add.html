@@ -39,7 +39,7 @@
                                     {% for c in categories %}
                                     <option value="{{c['id']}}"
                                             {% if defaultExtra(category[
-                                    'parent_id'], defaultExtra(old('parent_id'), 0)) == c['id']
+                                    'parent_id'], defaultExtra(old('parent_id'), defaultExtra(parentId, 0))) == c['id']
                                     %}selected{% endif %}>{{c['name']}}</option>
                                     {% endfor %}
                                 </select>

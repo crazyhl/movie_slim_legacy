@@ -18,7 +18,8 @@
                             {{breadcrumb(breadcrumb, 'd-inline-block small', 'mb-0 p-0')}}
                         </h3>
                         <div class="card-tools">
-                            <a class="btn btn-outline-info btn-sm" href="{{path_for('adminCategoryAdd')}}">添加分类</a>
+                            <a class="btn btn-outline-info btn-sm"
+                               href="{{path_for('adminCategoryAdd', {},{'parentId': parentId})}}">添加分类</a>
                         </div>
                     </div>
                     <!-- /.card-header -->
