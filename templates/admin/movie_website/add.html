@@ -1,0 +1,28 @@
+{% extends "/layout/admin/base.html" %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content" style="padding-top: 16px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">新增影视源站</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <form role="form" method="post" action="{{path_for('adminMovieWebSiteSave')}}">
+                        {{ include('admin/movie_website/_form.html') }}
+                    </form>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    </div>
+
+</section>
+
+{% endblock %}

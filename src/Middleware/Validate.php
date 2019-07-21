@@ -60,7 +60,7 @@ class Validate
         } else {
             $old = Old::get();
 
-            $flashMessage  =$this->container->flash;
+            $flashMessage = $this->container->flash;
             $flashMessage->addMessage('error', $message);
             $flashMessage->addMessage('old', $old);
             $response = $response->withRedirect($request->getHeader('referer')[0], 200);

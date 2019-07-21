@@ -52,7 +52,6 @@ class Category extends Base
         ]);
 
         $categories = $categoryQuery->myPaginate(3);
-
         $this->setTitle('分类管理');
         // 生成面包屑导航
 

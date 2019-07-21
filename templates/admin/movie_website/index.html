@@ -1,0 +1,72 @@
+{% extends "/layout/admin/base.html" %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content" style="padding-top: 16px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                {% if error() %}
+                <p class="bg-red" style="text-align: center; padding: 10px;">{{error()}}</p>
+                {% endif %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            影视源网站列表:&nbsp;
+                        </h3>
+                        <div class="card-tools">
+                            <a class="btn btn-outline-info btn-sm"
+                               href="{{path_for('adminMovieWebSiteAdd')}}">添加源网站</a>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th>名称</th>
+                                <th>apiUrl</th>
+                                <th>状态</th>
+                                <th>时间</th>
+                                <th>操作</th>
+                            </tr>
+                            {% for website in movieWebsites.data %}
+                            <tr>
+                                <td>
+                                    {{website.name}}
+                                </td>
+
+                                <td>
+                                    {{website.api_url}}
+                                </td>
+                                <td>
+                                    {{website.status ? '开启' : '关闭'}}
+                                </td>
+                                <td>
+                                    <span class="small">
+                                    C:{{website.create_date}}
+                                    U:{{website.update_date}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ path_for('adminMovieWebSiteEdit', {}, {'id':website.id}) }}" class="badge badge-primary">编辑</a>
+                                    <a href="{{ path_for('adminMovieWebSiteDelete', {}, {'id':website.id}) }}" class="badge badge-danger">删除</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        {{links (categories, true, 'float-right')}}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    </div>
+</section>
+
+{% endblock %}
