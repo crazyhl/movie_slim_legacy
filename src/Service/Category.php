@@ -47,7 +47,7 @@ class Category
         // 把分组的数据变成树形
         static $treeList = [];
         foreach ($categories as $category) {
-            $childrenList = $category['children'];
+            $childrenList = isset($category['children']) ? $category['children'] : false;
             unset($category['children']);
             $category[$nameFieldName] = str_pad($category[$nameFieldName], strlen($category[$nameFieldName]) + $depth * 3 , $pad, STR_PAD_LEFT);
             $treeList[] = $category;

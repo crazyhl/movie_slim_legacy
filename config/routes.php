@@ -51,6 +51,8 @@ return function (App $app) {
             $app->get('/delete', MovieWebsite::class . ':softDelete')->setName('adminMovieWebSiteDelete');
             $app->get('/bind-category', MovieWebsite::class . ':bindCategory')
                 ->setName('adminMovieWebSiteBindCategory');
+            $app->post('/bind-category', MovieWebsite::class . ':bindCategorySave')
+                ->setName('adminMovieWebSiteBindCategorySave');
         });
     })->add(new NeedLogin($container));
 };

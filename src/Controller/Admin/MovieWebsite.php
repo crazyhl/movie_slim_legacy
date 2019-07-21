@@ -133,12 +133,36 @@ class MovieWebsite extends Base
                 'is_show' => $sourceBindRelation['is_show'],
             ];
         }
-        echo '<pre>';
-        var_dump($sourceCategories);
-        echo '</pre>';
-        exit();
+//        echo '<pre>';
+//        var_dump($sourceCategories);
+//        echo '</pre>';
+//        exit();
         // 获取已经绑定的分类列表
         return $this->display($response, 'admin/movie_website/bind_category.html'
             , compact('website', 'categories', 'sourceCategories', 'movieSiteCategoryRelationArr'));
+    }
+
+    public function bindCategorySave(Request $request, Response $response)
+    {
+        $sourceCategoryIdArr = $request->getParsedBodyParam('sourceCategoryId');
+        $websiteId = $request->getParsedBodyParam('websiteId');
+        // 遍历来源分类
+        foreach ($sourceCategoryIdArr as $sourceCategoryId) {
+            $localCategoryId = $request->getParsedBodyParam('localCategoryId-' . $sourceCategoryId);
+            $isShow = $request->getParsedBodyParam('isShow-' . $sourceCategoryId);
+            if ($localCategoryId === null || $isShow === null) {
+                continue;
+            }
+            MovieSiteCategoryRelation::updateOrCreate([
+                'source_website_id' => $websiteId,
+                'source_website_category_id' => $sourceCategoryId,
+            ], [
+                'source_website_id' => $websiteId,
+                'source_website_category_id' => $sourceCategoryId,
+                'local_category_id' => $localCategoryId,
+                'is_show' => $isShow,
+            ]);
+        }
+        return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
     }
 }
