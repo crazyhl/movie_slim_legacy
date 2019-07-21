@@ -51,7 +51,7 @@ class Category extends Base
             'current' => count($breadcrumb) == 0 ? true : false,
         ]);
 
-        $categories = $categoryQuery->myPaginate(3);
+        $categories = $categoryQuery->myPaginate(10);
         $this->setTitle('分类管理');
         // 生成面包屑导航
 
@@ -66,6 +66,7 @@ class Category extends Base
         $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
         $categories = CategoryService::groupCategory($categories);
         $categories = CategoryService::groupToTree($categories);
+
         $parentId = $request->getQueryParam('parentId', -1);
 
 //        return $this->view->render($response, 'admin/category/add.html', compact('categories'));
@@ -95,8 +96,12 @@ class Category extends Base
             return $response->withRedirect($this->container->router->pathFor('adminCategoryAdd'), 200);
         }
         $category = CategoryModel::find($categoryId);
+
+        $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
+        $categories = CategoryService::groupCategory($categories);
+        $categories = CategoryService::groupToTree($categories);
         return $this->display($response, 'admin/category/edit.html'
-            , compact('category'));
+            , compact('category', 'categories'));
     }
 
     public function update(Request $request, Response $response)

@@ -49,6 +49,8 @@ return function (App $app) {
             $app->post('/update', MovieWebsite::class . ':update')->setName('adminMovieWebSiteUpdate')
                 ->add(new Validate($container, new EditSourceMovieWebsiteValidator()));
             $app->get('/delete', MovieWebsite::class . ':softDelete')->setName('adminMovieWebSiteDelete');
+            $app->get('/bind-category', MovieWebsite::class . ':bindCategory')
+                ->setName('adminMovieWebSiteBindCategory');
         });
     })->add(new NeedLogin($container));
 };

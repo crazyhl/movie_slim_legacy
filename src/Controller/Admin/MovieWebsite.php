@@ -6,7 +6,10 @@ namespace App\Controller\Admin;
 
 use App\Controller\Base;
 use App\Model\Category as CategoryModel;
+use App\Model\MovieSiteCategoryRelation;
 use App\Model\SourceMovieWebsite;
+use GuzzleHttp\Client;
+use phpDocumentor\Reflection\Types\Object_;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Service\Category as CategoryService;
@@ -91,12 +94,51 @@ class MovieWebsite extends Base
     {
         $websiteId = $request->getQueryParam('id', 0);
         $website = SourceMovieWebsite::find($websiteId);
-        if ($website) {
-            $website->status = 0;
-            $website->save();
+        if (empty($websiteId)) {
+            $flashMessage = $this->container->flash;
+            $flashMessage->addMessage('error', '源站不存在');
+            return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
+        }
+        // 获取所有分类
+        $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
+        $categories = CategoryService::groupCategory($categories);
+        $categories = CategoryService::groupToTree($categories);
+        // 获取源网站分类
+        $url = $website->api_url . '?ac=list';
+        $client = new Client();
+        $res = $client->request('GET', $url);
+        $statusCode = $res->getStatusCode();
+        if ($statusCode !== 200) {
+            $flashMessage = $this->container->flash;
+            $flashMessage->addMessage('error', '源站不存在');
+            return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
+        }
+        $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
+        $sourceCategories = [];
+        foreach ($bodyElement->class->ty as $key => $value) {
+            $sourceCategories[$value['id']->__toString()] = $value->__toString();
+
+        }
+        $movieSiteCategoryRelation = MovieSiteCategoryRelation::where('source_website_id', $websiteId)->get();
+
+        if (empty($movieSiteCategoryRelation)) {
+            $movieSiteCategoryRelation = [];
         }
 
+        $movieSiteCategoryRelationArr = [];
 
-        return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
+        foreach ($movieSiteCategoryRelation as $sourceBindRelation) {
+            $movieSiteCategoryRelationArr[$sourceBindRelation['id']] = [
+                'local_category_id' => $sourceBindRelation['local_category_id'],
+                'is_show' => $sourceBindRelation['is_show'],
+            ];
+        }
+        echo '<pre>';
+        var_dump($sourceCategories);
+        echo '</pre>';
+        exit();
+        // 获取已经绑定的分类列表
+        return $this->display($response, 'admin/movie_website/bind_category.html'
+            , compact('website', 'categories', 'sourceCategories', 'movieSiteCategoryRelationArr'));
     }
 }
