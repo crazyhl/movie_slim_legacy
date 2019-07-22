@@ -4,6 +4,8 @@
 namespace App\Command;
 
 
+use App\Model\CronJob;
+use App\Service\SourceMovieWebSite;
 use Carbon\Carbon;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,7 +35,6 @@ class FullCrawlerProcess extends BaseCommand
 //  */1 * * * * /usr/local/bin/php /var/www/movie_slim_legacy/console/index.php task:full >> /var/log/php/crontab.log 2>&1
 
 
-
     /**
      * 真正执行命令的地方
      * @param InputInterface $input
@@ -42,7 +43,7 @@ class FullCrawlerProcess extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        usleep(rand(100000, 1000000));
+        sleep(rand(1, 10));
         // 检查锁
         if (!$this->lock()) {
             $output->writeln('The command is already running in another process.');
@@ -50,9 +51,36 @@ class FullCrawlerProcess extends BaseCommand
             return 0;
         }
 
+        $cronJob = CronJob::where('name', 'fullTask')
+            ->where('type', 1)
+            ->where('status', 0)
+            ->where('execute_time', '<=', Carbon::now()->timestamp)
+            ->first();
 
+        if (empty($cronJob)) {
+            $cronJob = CronJob::where('name', 'fullTask')
+                ->where('type', 1)
+                ->where('status', 1)
+                ->where('start_time', '<=', Carbon::now()->timestamp - 86400 * 3)
+                ->first();
+        }
 
+        if (empty($cronJob)) {
+            $this->container->logger->info('本次没有获取全部任务执行');
+            return 0;
+        }
+
+        // 如果有任务就要更新状态了
+        $cronJob->start_time = Carbon::now()->timestamp;
+        $cronJob->status = 1; // 正在执行
+        $cronJob->save();
         // 释放锁
         $this->release();
+        // 获取了数据之后就去爬数据吧
+        $params = json_decode($cronJob->params, true);
+        $output->writeln($params['webSiteId']);
+        $output->writeln($params['fdasfdsa']);
+        $output->writeln($params);
+        $output->writeln($cronJob->params);
     }
 }
