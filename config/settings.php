@@ -1,7 +1,9 @@
 <?php
 
+use App\Command\FullCrawlerProcess;
 use App\Command\InitAdmin;
 use App\Command\InitDataBase;
+use App\Command\ShortCrawlerProcess;
 use App\Command\TestCommand2;
 use App\Command\TestProcess;
 use App\Command\TestCommand;
@@ -46,6 +48,8 @@ return [
         'test:command2' => TestCommand2::class,
         'db:init' => InitDataBase::class,
         'admin:init' => InitAdmin::class,
+        'task:full' => FullCrawlerProcess::class,
+        'task:short' => ShortCrawlerProcess::class,
     ],
     'tz' => 'Asia/Shanghai',
 ];

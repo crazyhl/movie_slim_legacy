@@ -23,7 +23,7 @@ trait CheckIsLogin
             $loginToken = openssl_decrypt($cipherTextRaw, getenv('CRYPT_METHOD'), getenv('APP_KEY'), OPENSSL_RAW_DATA, $iv);
             list($uid,) = explode('-', $loginToken);
             $loginUser = User::where('token', $loginToken)->first();
-            if ($_SESSION['uid'] == $uid || (empty($_SESSION['uid']) && $loginUser)) {
+            if ( (empty($_SESSION['uid']) && $loginUser) || $_SESSION['uid'] == $uid) {
                 // 已登录
                 if (empty($_SESSION['uid'])) {
                     // 如果是 remember 则要初始化 session

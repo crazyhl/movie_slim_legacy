@@ -97,6 +97,8 @@ class InitDataBase extends BaseCommand
                 ->comment('任务执行的时间，就是在遍历的时候如果这个时间小于当前时间了，就说明可以执行了');
             $table->integer('max_execute_time')->unsigned()
                 ->comment('任务执行的最大时间，如果超过这个时间了，会考虑给杀死进程,如果是0 则不限');
+            $table->integer('start_time')->unsigned()
+                ->comment('开始时间');
             $table->tinyInteger('status')->unsigned()
                 ->comment('任务执行状态 0 未执行 1 正在执行');
             $table->timestamps();
