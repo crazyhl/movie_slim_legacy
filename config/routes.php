@@ -53,6 +53,7 @@ return function (App $app) {
                 ->setName('adminMovieWebSiteBindCategory');
             $app->post('/bind-category', MovieWebsite::class . ':bindCategorySave')
                 ->setName('adminMovieWebSiteBindCategorySave');
+            $app->get('/full-task', MovieWebsite::class . ':fullTask')->setName('adminMovieWebSiteFullTask');
         });
     })->add(new NeedLogin($container));
 };

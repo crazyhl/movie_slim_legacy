@@ -31,7 +31,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": ">=5.0",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "ext-json": "*"
   },
   "autoload-dev": {
     "psr-4": {

@@ -6,8 +6,10 @@ namespace App\Controller\Admin;
 
 use App\Controller\Base;
 use App\Model\Category as CategoryModel;
+use App\Model\CronJob;
 use App\Model\MovieSiteCategoryRelation;
 use App\Model\SourceMovieWebsite;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use phpDocumentor\Reflection\Types\Object_;
 use Slim\Http\Request;
@@ -163,6 +165,38 @@ class MovieWebsite extends Base
                 'is_show' => $isShow,
             ]);
         }
+        return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
+    }
+
+    public function fullTask(Request $request, Response $response)
+    {
+        $flashMessage = $this->container->flash;
+
+        $cronJob = CronJob::where([
+            'name' => 'fullTask',
+            'params' => json_encode([
+                'webSiteId' => 1,
+            ]),
+            'type' => 1,
+        ])->first();
+        if ($cronJob) {
+            $flashMessage->addMessage('error', '已存在相同任务正在执行中，请不要重复加入');
+        } else {
+            $cronJob = new CronJob();
+            $cronJob->name = 'fullTask';
+            $cronJob->params = json_encode([
+                'webSiteId' => 1,
+            ]);
+            $cronJob->type = 1;
+            $cronJob->execute_time = Carbon::now()->timestamp;
+            $cronJob->max_execute_time = 86400 * 3; // 一个任务执行3天不过分
+            $cronJob->start_time = 0;
+            $cronJob->status = 0;
+            $cronJob->save();
+
+            $flashMessage->addMessage('error', '插入全部任务插入成功，不要重复插入，浪费系统资源');
+        }
+
         return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
     }
 }

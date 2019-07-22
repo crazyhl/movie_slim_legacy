@@ -87,11 +87,11 @@ class InitDataBase extends BaseCommand
         Manager::schema()->dropIfExists($tableName);
         Manager::schema()->create($tableName, function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')
+            $table->string('name')->index()
                 ->comment('就是 command 的name');
-            $table->string('params')
+            $table->string('params')->index()
                 ->comment('json 形式的参数，在执行的时候会被映射为 --xxx=xxx --aaa=aaa 这种');
-            $table->tinyInteger('type')
+            $table->tinyInteger('type')->index()
                 ->comment('任务类型，1 一次性任务 2 每小时 执行一次的任务，3 每天执行一次 ....');
             $table->integer('execute_time')->unsigned()
                 ->comment('任务执行的时间，就是在遍历的时候如果这个时间小于当前时间了，就说明可以执行了');
