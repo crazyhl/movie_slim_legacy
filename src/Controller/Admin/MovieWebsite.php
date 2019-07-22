@@ -128,7 +128,7 @@ class MovieWebsite extends Base
         $movieSiteCategoryRelationArr = [];
 
         foreach ($movieSiteCategoryRelation as $sourceBindRelation) {
-            $movieSiteCategoryRelationArr[$sourceBindRelation['id']] = [
+            $movieSiteCategoryRelationArr[$sourceBindRelation['source_website_category_id']] = [
                 'local_category_id' => $sourceBindRelation['local_category_id'],
                 'is_show' => $sourceBindRelation['is_show'],
             ];
