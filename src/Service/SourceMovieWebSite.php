@@ -78,27 +78,31 @@ class SourceMovieWebSite
                 $isShow = 0;
             }
 
-            $data = [
-                'source_website_id' => $websiteId,
-                'source_website_category_id' => $tid,
-                'source_website_movie_id' => $video->id->__toString(),
-                'name' => $name,
-                'name_md5' => md5($name),
-                'category_id' => $movieSiteCategoryRelationArr[$tid]['local_category_id'],
-                'pic' => $video->pic->__toString(),
-                'lang' => $video->lang->__toString(),
-                'area' => $video->area->__toString(),
-                'year' => $video->year->__toString(),
-                'note' => $video->note->__toString(),
-                'actor' => $video->actor->__toString(),
-                'director' => $video->director->__toString(),
-                'description' => $video->des->__toString(),
-                'movie_list' => $dd,
-                'last' => $video->last->__toString(),
-                'is_show' => $isShow,
-            ];
+            $localCategoryId = $movieSiteCategoryRelationArr[$tid]['local_category_id'];
+            if ($localCategoryId) {
+                $data = [
+                    'source_website_id' => $websiteId,
+                    'source_website_category_id' => $tid,
+                    'source_website_movie_id' => $video->id->__toString(),
+                    'name' => $name,
+                    'name_md5' => md5($name),
+                    'category_id' => $localCategoryId,
+                    'pic' => $video->pic->__toString(),
+                    'lang' => $video->lang->__toString(),
+                    'area' => $video->area->__toString(),
+                    'year' => $video->year->__toString(),
+                    'note' => $video->note->__toString(),
+                    'actor' => $video->actor->__toString(),
+                    'director' => $video->director->__toString(),
+                    'description' => $video->des->__toString(),
+                    'movie_list' => $dd,
+                    'last' => $video->last->__toString(),
+                    'is_show' => $isShow,
+                ];
 
-            self::saveMovieInfo($data);
+                self::saveMovieInfo($data);
+            }
+
         }
         // 加载其他页面
 //        if ($page < $pageCount) {
