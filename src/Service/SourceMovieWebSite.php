@@ -34,7 +34,7 @@ class SourceMovieWebSite
         $fullUrl = $webSite->api_url . '?' . $params;
 
         $client = new Client();
-        $res = $client->request('GET', $fullUrl);
+        $res = $client->request('GET', $fullUrl, ['verify' => false]);
         $statusCode = $res->getStatusCode();
         if ($statusCode !== 200) {
             return '获取源站数据失败';
@@ -208,7 +208,7 @@ class SourceMovieWebSite
     private static function downloadMovieImage($picUrl, $savePath)
     {
         $client = new Client();
-        $res = $client->request('GET', $picUrl, ['sink' => $savePath]);
+        $res = $client->request('GET', $picUrl, ['sink' => $savePath, 'verify' => false]);
         $statusCode = $res->getStatusCode();
         if ($statusCode == 200) {
             return true;
