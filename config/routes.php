@@ -20,7 +20,7 @@ return function (App $app) {
 
     $app->get('/admin/login', Auth::class . ':login')->setName('adminLogin')->add(new AlreadyLogin($container));
     $app->post('/admin/login', Auth::class . ':loginAction')->setName('adminLoginAction');
-
+    $app->get('/test', MovieWebsite::class . ':test');
     $app->group('/admin', function (App $app) {
         $app->get('', AdminIndex::class . ':index')->setName('admin');
         $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');

@@ -12,6 +12,8 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+define('APP_DIR', __DIR__ . '/../');
+
 require __DIR__ . '/../vendor/autoload.php';
 
 // 设置 session_name

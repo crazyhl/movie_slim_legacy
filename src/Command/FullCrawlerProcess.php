@@ -43,6 +43,9 @@ class FullCrawlerProcess extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // 设置运行不超时
+        set_time_limit(0);
+
         sleep(rand(1, 10));
         // 检查锁
         if (!$this->lock()) {
@@ -78,9 +81,10 @@ class FullCrawlerProcess extends BaseCommand
         $this->release();
         // 获取了数据之后就去爬数据吧
         $params = json_decode($cronJob->params, true);
-        $output->writeln($params['webSiteId']);
-        $output->writeln($params['fdasfdsa']);
-        $output->writeln($params);
-        $output->writeln($cronJob->params);
+
+        $websiteId = $params['webSiteId'];
+
+        $info= SourceMovieWebSite::getFullMovies($websiteId);
+        $output->writeln($info);
     }
 }

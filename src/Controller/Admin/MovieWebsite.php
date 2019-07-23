@@ -112,7 +112,7 @@ class MovieWebsite extends Base
         $statusCode = $res->getStatusCode();
         if ($statusCode !== 200) {
             $flashMessage = $this->container->flash;
-            $flashMessage->addMessage('error', '源站不存在');
+            $flashMessage->addMessage('error', 'api获取信息失败');
             return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
         }
         $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
@@ -198,5 +198,14 @@ class MovieWebsite extends Base
         }
 
         return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
+    }
+
+    public function test(Request $request, Response $response)
+    {
+        $info = \App\Service\SourceMovieWebSite::getFullMovies(1);
+        echo '<pre>';
+        var_dump($info);
+        echo '</pre>';
+        exit();
     }
 }

@@ -168,6 +168,16 @@ class InitDataBase extends BaseCommand
                 'name_md5',
             ]);
         });
+
+        // 源站电影
+        $tableName = 'resource_image';
+        Manager::schema()->dropIfExists($tableName);
+        Manager::schema()->create($tableName, function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('file_md5')->unique()->comment('文件md5');
+            $table->string('file_path')->unique()->comment('文件本地路径');
+            $table->timestamps();
+        });
         $output->writeln($tableName . ' 创建完成');
 
         // 释放锁
