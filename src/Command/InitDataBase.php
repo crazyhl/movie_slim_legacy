@@ -149,8 +149,10 @@ class InitDataBase extends BaseCommand
             $table->increments('id');
             $table->integer('source_website_id')->comment('源站id');
             $table->integer('source_website_category_id')->comment('源站分类id');
+            $table->integer('source_website_movie_id')->comment('源站影片id');
+            $table->integer('local_id')->index()->comment('本地影片id');
             $table->string('name')->comment('影片名称');
-            $table->string('name_md5')->unique()->comment('影片名称md5 用来做唯一性验证');
+            $table->string('name_md5')->index()->comment('影片名称md5 用来做唯一性验证');
             $table->string('category_id')->index()->comment('本地分类id');
             $table->string('pic')->comment('本地图片路径');
             $table->string('lang')->comment('语言');
@@ -165,11 +167,12 @@ class InitDataBase extends BaseCommand
 
             $table->index([
                 'source_website_id',
-                'name_md5',
+                'source_website_movie_id',
             ]);
         });
+        $output->writeln($tableName . ' 创建完成');
 
-        // 源站电影
+//        // 资源图片
         $tableName = 'resource_image';
         Manager::schema()->dropIfExists($tableName);
         Manager::schema()->create($tableName, function (Blueprint $table) {

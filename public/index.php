@@ -12,7 +12,8 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
-define('APP_DIR', __DIR__ . '/../');
+define('RUN_SCRIPT_DIR', __DIR__);
+define('APP_DIR', __DIR__ . '/..');
 
 require __DIR__ . '/../vendor/autoload.php';
 
