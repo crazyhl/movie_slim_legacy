@@ -98,7 +98,9 @@ class SourceMovieWebSite
         $picFileName = $data['source_website_id'] . '_' . $data['source_website_movie_id'] . $fileExt;
 
         $fullFileDir = APP_DIR . '/public' . $picFileDir;
-        mkdir($fullFileDir, 0755, true);
+        if (!is_dir($fullFileDir)) {
+            mkdir($fullFileDir, 0755, true);
+        }
 
         $fullPath = $fullFileDir . $picFileName;
         $savePath = $picFileDir . $picFileName;
