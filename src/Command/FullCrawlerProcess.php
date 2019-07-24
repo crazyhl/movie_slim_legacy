@@ -86,5 +86,8 @@ class FullCrawlerProcess extends BaseCommand
 
         $info= SourceMovieWebSite::getFullMovies($websiteId);
         $output->writeln($info);
+
+        // 然后修改数据库
+        $cronJob->delete();
     }
 }

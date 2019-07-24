@@ -54,6 +54,7 @@ return function (App $app) {
             $app->post('/bind-category', MovieWebsite::class . ':bindCategorySave')
                 ->setName('adminMovieWebSiteBindCategorySave');
             $app->get('/full-task', MovieWebsite::class . ':fullTask')->setName('adminMovieWebSiteFullTask');
+            $app->get('/short-task', MovieWebsite::class . ':shortTask')->setName('adminMovieWebSiteShortTask');
         });
     })->add(new NeedLogin($container));
 };

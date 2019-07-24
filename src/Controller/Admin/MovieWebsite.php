@@ -108,7 +108,7 @@ class MovieWebsite extends Base
         // 获取源网站分类
         $url = $website->api_url . '?ac=list';
         $client = new Client();
-        $res = $client->request('GET', $url);
+        $res = $client->request('GET', $url, ['verify' => false]);
         $statusCode = $res->getStatusCode();
         if ($statusCode !== 200) {
             $flashMessage = $this->container->flash;
@@ -172,10 +172,12 @@ class MovieWebsite extends Base
     {
         $flashMessage = $this->container->flash;
 
+        $websiteId = $request->getQueryParam('id');
+
         $cronJob = CronJob::where([
             'name' => 'fullTask',
             'params' => json_encode([
-                'webSiteId' => 1,
+                'webSiteId' => $websiteId,
             ]),
             'type' => 1,
         ])->first();
@@ -185,7 +187,7 @@ class MovieWebsite extends Base
             $cronJob = new CronJob();
             $cronJob->name = 'fullTask';
             $cronJob->params = json_encode([
-                'webSiteId' => 1,
+                'webSiteId' => $websiteId,
             ]);
             $cronJob->type = 1;
             $cronJob->execute_time = Carbon::now()->timestamp;
@@ -200,9 +202,33 @@ class MovieWebsite extends Base
         return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
     }
 
+    public function shortTask(Request $request, Response $response)
+    {
+        $flashMessage = $this->container->flash;
+        $websiteId = $request->getQueryParam('id');
+
+
+        $cronJob = new CronJob();
+        $cronJob->name = 'shortTask';
+        $cronJob->params = json_encode([
+            'webSiteId' => $websiteId,
+        ]);
+        $cronJob->type = 2;
+        $cronJob->execute_time = Carbon::now()->timestamp;
+        $cronJob->max_execute_time = 0;
+        $cronJob->start_time = 0;
+        $cronJob->status = 0;
+        $cronJob->save();
+
+        $flashMessage->addMessage('error', '定时任务插入成功，不要重复插入，浪费系统资源');
+
+        return $response->withRedirect($this->container->router->pathFor('adminMovieWebSite'), 200);
+    }
+
+
     public function test(Request $request, Response $response)
     {
-        $info = \App\Service\SourceMovieWebSite::getFullMovies(1);
+        $info = \App\Service\SourceMovieWebSite::getDayMovies(1);
         echo '<pre>';
         var_dump($info);
         echo '</pre>';

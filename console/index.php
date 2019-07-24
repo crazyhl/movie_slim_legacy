@@ -1,6 +1,12 @@
 <?php
+
+use App\Utils\Val;
+
 if (PHP_SAPI == 'cli') {
     ini_set('date.timezone','Asia/Shanghai');
+
+    define('RUN_SCRIPT_DIR', __DIR__);
+    define('APP_DIR', __DIR__ . '/..');
 
     require __DIR__ . '/../vendor/autoload.php';
 
@@ -10,6 +16,7 @@ if (PHP_SAPI == 'cli') {
     ini_set('date.timezone', $settings['tz']);
 
     $app = new \Slim\App($settings);
+
 
     // Set up dependencies
     $dependencies = require __DIR__ . '/../config/dependencies.php';
@@ -22,6 +29,8 @@ if (PHP_SAPI == 'cli') {
     $consoleApplication = new \Symfony\Component\Console\Application();
     // 获取 slim 的 container
     $container = $app->getContainer();
+
+    Val::getInstance()['container'] = $container;
     // 遍历 commands 在 symfony console 中注册相关命令，
     // 并且把 slim的 container 中注入进去，这样就可以使用 slim 的 container 了
     /**

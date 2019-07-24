@@ -8,16 +8,33 @@ use App\Model\MovieSiteCategoryRelation;
 use App\Model\ResourceImage;
 use App\Model\SourceMovie;
 use App\Model\SourceMovieWebsite as SourceMovieWebsiteModel;
+use App\Utils\Val;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 
 class SourceMovieWebSite
 {
-    public static function getFullMovies($websiteId)
+    public static function getDayMovies($websiteId)
+    {
+
+        $currentHour = Carbon::now()->hour;
+        if ($currentHour < 4) {
+            self::getMovies($websiteId, [
+                'ac' => 'videolist',
+            ], -5);
+        }
+
+        return self::getMovies($websiteId, [
+            'ac' => 'videolist',
+            'h' => 24,
+        ]);
+    }
+
+    public static function getFullMovies($websiteId, $page = 1)
     {
         return self::getMovies($websiteId, [
             'ac' => 'videolist',
-        ]);
+        ], $page);
     }
 
     public static function getMovies($websiteId, $params, $page = 1)
@@ -28,20 +45,8 @@ class SourceMovieWebSite
             return 0;
         }
 
-        $params['pg'] = $page;
-
-        $params = http_build_query($params);
-        $fullUrl = $webSite->api_url . '?' . $params;
-
-        $client = new Client();
-        $res = $client->request('GET', $fullUrl, ['verify' => false]);
-        $statusCode = $res->getStatusCode();
-        if ($statusCode !== 200) {
-            return '获取源站数据失败';
-        }
 
         $movieSiteCategoryRelation = MovieSiteCategoryRelation::with('localCategory')->where('source_website_id', $websiteId)->get();
-
 
         if (empty($movieSiteCategoryRelation)) {
             return '没绑定分类不能抓取';
@@ -57,58 +62,29 @@ class SourceMovieWebSite
             ];
         }
 
+        $params['pg'] = 1;
 
-        $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
-        $list = $bodyElement->list;
-        $pageCount = $list['pagecount']->__toString();
-        // 保存当前影片
-        foreach ($list->children() as $video) {
-            // 构造data
-            $tid = $video->tid->__toString();
-            $name = $video->name->__toString();
-            $dd = '';
-            foreach ($video->dl->children() as $dd) {
-                if (substr($dd['flag'], -4) == 'm3u8') {
-                    $dd = $dd->__toString();
-                }
-            }
-
-            $isShow = 1;
-            if ($movieSiteCategoryRelationArr[$tid]['is_show'] == 0 || $movieSiteCategoryRelationArr[$tid]['category_is_show'] == 0) {
-                $isShow = 0;
-            }
-
-            $localCategoryId = $movieSiteCategoryRelationArr[$tid]['local_category_id'];
-            if ($localCategoryId) {
-                $data = [
-                    'source_website_id' => $websiteId,
-                    'source_website_category_id' => $tid,
-                    'source_website_movie_id' => $video->id->__toString(),
-                    'name' => $name,
-                    'name_md5' => md5($name),
-                    'category_id' => $localCategoryId,
-                    'pic' => $video->pic->__toString(),
-                    'lang' => $video->lang->__toString(),
-                    'area' => $video->area->__toString(),
-                    'year' => $video->year->__toString(),
-                    'note' => $video->note->__toString(),
-                    'actor' => $video->actor->__toString(),
-                    'director' => $video->director->__toString(),
-                    'description' => $video->des->__toString(),
-                    'movie_list' => $dd,
-                    'last' => $video->last->__toString(),
-                    'is_show' => $isShow,
-                ];
-
-                self::saveMovieInfo($data);
-            }
-
+        $buildParams = http_build_query($params);
+        $fullUrl = $webSite->api_url . '?' . $buildParams;
+        $totalPage = self::getTotalPage($fullUrl);
+        if ($totalPage === false) {
+            return '获取总页数失败';
         }
-        // 加载其他页面
-//        if ($page < $pageCount) {
-//            $page += 1;
-//            self::getMovies($websiteId, $params, $page);
-//        }
+        $startPage = $page;
+        if ($page < 0) {
+            $startPage = $totalPage + $startPage;
+        }
+
+        for ($i = $startPage; $i <= $totalPage; $i++) {
+            $params['pg'] = $i;
+
+            $buildParams = http_build_query($params);
+            $fullUrl = $webSite->api_url . '?' . $buildParams;
+
+            self::getMovieList($fullUrl, $websiteId, $movieSiteCategoryRelation);
+        }
+
+
         return 1; //$bodyElement['pagecount'];
     }
 
@@ -121,7 +97,7 @@ class SourceMovieWebSite
         $fileExt = substr($data['pic'], strrpos($data['pic'], '.'));
         $picFileName = $data['source_website_id'] . '_' . $data['source_website_movie_id'] . $fileExt;
 
-        $fullFileDir = RUN_SCRIPT_DIR . $picFileDir;
+        $fullFileDir = APP_DIR . '/public' . $picFileDir;
         mkdir($fullFileDir, 0755, true);
 
         $fullPath = $fullFileDir . $picFileName;
@@ -129,19 +105,7 @@ class SourceMovieWebSite
 //        var_dump($picFileDir);
 //        var_dump( $fullFileDir. $picFileName);
         $downloadPicResult = false;
-        // 重试机制
-        for ($i = 0; $i < 5; $i++) {
-            $downloadPicResult = self::downloadMovieImage($data['pic'], $fullFileDir . $picFileName . '.tmp');
-            if ($downloadPicResult) {
-                break;
-            }
-        }
 
-        if ($downloadPicResult) {
-            // 下载成功了就查询图片咯
-            $filePath = self::checkImageExist($fullPath, $savePath);
-            $data['pic'] = $filePath;
-        }
 
         // 然后就可以保存数据了
         // 先查询影片是否存在
@@ -149,6 +113,23 @@ class SourceMovieWebSite
         if ($movie) {
             $localMovieId = $movie->id;
         } else {
+            // 重试机制
+//            for ($i = 0; $i < 5; $i++) {
+
+            if ($data['pic']) {
+                $downloadPicResult = self::downloadMovieImage($data['pic'], $fullFileDir . $picFileName . '.tmp');
+            }
+//                if ($downloadPicResult) {
+//                    break;
+//                }
+//            }
+
+            if ($downloadPicResult) {
+                // 下载成功了就查询图片咯
+                $filePath = self::checkImageExist($fullPath, $savePath);
+                $data['pic'] = $filePath;
+            }
+
             // 不存在就创建
             $movie = new Movie();
             $movie->name = $data['name'];
@@ -163,6 +144,7 @@ class SourceMovieWebSite
             $movie->director = $data['director'];
             $movie->description = $data['description'];
             $movie->is_show = $data['is_show'];
+            $movie->updated_at = Carbon::createFromTimeString($data['last']);
             $movie->save();
 
             $localMovieId = $movie->id;
@@ -212,7 +194,7 @@ class SourceMovieWebSite
     private static function downloadMovieImage($picUrl, $savePath)
     {
         $client = new Client();
-        $res = $client->request('GET', $picUrl, ['sink' => $savePath, 'verify' => false]);
+        $res = $client->request('GET', $picUrl, ['sink' => $savePath, 'verify' => false, 'max' => 10, 'timeout' => 30, 'read_timeout' => 30, 'connect_timeout' => 30]);
         $statusCode = $res->getStatusCode();
         if ($statusCode == 200) {
             return true;
@@ -238,5 +220,83 @@ class SourceMovieWebSite
         }
 
         return $savePath;
+    }
+
+    private static function getTotalPage($apiUrl)
+    {
+        $client = new Client();
+        $res = $client->request('GET', $apiUrl, ['verify' => false]);
+        $statusCode = $res->getStatusCode();
+        if ($statusCode !== 200) {
+            return false;
+        }
+
+        // 获取总页数
+        $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
+        $list = $bodyElement->list;
+        $pageCount = $list['pagecount']->__toString();
+
+        return $pageCount;
+    }
+
+    private static function getMovieList($apiUrl, $websiteId, $movieSiteCategoryRelationArr)
+    {
+        $client = new Client();
+        $res = $client->request('GET', $apiUrl, ['verify' => false]);
+        $statusCode = $res->getStatusCode();
+        if ($statusCode !== 200) {
+            return false;
+        }
+        Val::getInstance()['container']->logger->error('apiUrl' . $apiUrl);
+        // 获取总页数
+        $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
+        $list = $bodyElement->list;
+        // 保存当前影片
+        foreach ($list->children() as $video) {
+            // 构造data
+            $tid = $video->tid->__toString();
+            $name = $video->name->__toString();
+            $dd = '';
+            foreach ($video->dl->children() as $dd) {
+                if (substr($dd['flag'], -4) == 'm3u8') {
+                    $dd = $dd->__toString();
+                }
+            }
+
+            $isShow = 1;
+            if ($movieSiteCategoryRelationArr[$tid]['is_show'] == 0 || $movieSiteCategoryRelationArr[$tid]['category_is_show'] == 0) {
+                $isShow = 0;
+            }
+
+            $localCategoryId = $movieSiteCategoryRelationArr[$tid]['local_category_id'];
+            if ($localCategoryId) {
+                $data = [
+                    'source_website_id' => $websiteId,
+                    'source_website_category_id' => $tid,
+                    'source_website_movie_id' => $video->id->__toString(),
+                    'name' => $name,
+                    'name_md5' => md5($name),
+                    'category_id' => $localCategoryId,
+                    'pic' => $video->pic->__toString(),
+                    'lang' => $video->lang->__toString(),
+                    'area' => $video->area->__toString(),
+                    'year' => $video->year->__toString(),
+                    'note' => $video->note->__toString(),
+                    'actor' => $video->actor->__toString(),
+                    'director' => $video->director->__toString(),
+                    'description' => $video->des->__toString(),
+                    'movie_list' => $dd,
+                    'last' => $video->last->__toString(),
+                    'is_show' => $isShow,
+                ];
+
+                try {
+                    self::saveMovieInfo($data);
+                } catch (\Exception $e) {
+                    Val::getInstance()['container']->logger->error(json_encode($data) . '-----' . $e->getMessage());
+                }
+            }
+
+        }
     }
 }
