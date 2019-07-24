@@ -43,7 +43,6 @@ class FullCrawlerProcess extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->container->logger->info('asdf');
         // 设置运行不超时
         set_time_limit(0);
 

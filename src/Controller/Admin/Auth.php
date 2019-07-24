@@ -47,7 +47,7 @@ class Auth extends Base
 
         $error = '';
         // 通过用户名密码，检测用户名密码是否正确
-        $user = User::where('username', $username)->first();
+        $user = User::where('username', $username)->where('is_admin', 1)->first();
         if ($user) {
             if (password_verify($password, $user->password)) {
                 $expire = 0;
