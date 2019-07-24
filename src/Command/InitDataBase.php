@@ -162,7 +162,7 @@ class InitDataBase extends BaseCommand
             $table->string('actor')->comment('演员');
             $table->string('director')->comment('导演');
             $table->text('description')->comment('简介');
-            $table->text('movie_list')->comment('影片列表');
+            $table->mediumText('movie_list')->comment('影片列表');
             $table->timestamps();
 
             $table->index([
