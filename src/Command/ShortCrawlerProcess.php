@@ -59,7 +59,7 @@ class ShortCrawlerProcess extends BaseCommand
                 ->delete();
 
         if (empty($cronJob)) {
-            $this->container->logger->info('本次没有获取短期任务执行');
+//            $this->container->logger->info('本次没有获取短期任务执行');
             return 0;
         }
 

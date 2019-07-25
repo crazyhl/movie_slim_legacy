@@ -69,7 +69,7 @@ class FullCrawlerProcess extends BaseCommand
         }
 
         if (empty($cronJob)) {
-            $this->container->logger->info('本次没有获取全部任务执行');
+//            $this->container->logger->info('本次没有获取全部任务执行');
             return 0;
         }
 
