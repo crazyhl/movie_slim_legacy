@@ -52,4 +52,5 @@ return [
         'task:short' => ShortCrawlerProcess::class,
     ],
     'tz' => 'Asia/Shanghai',
+    'downloadCover' => false,
 ];

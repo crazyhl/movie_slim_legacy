@@ -48,7 +48,8 @@ class SourceMovieWebSite
 
         $movieSiteCategoryRelation = MovieSiteCategoryRelation::with('localCategory')->where('source_website_id', $websiteId)->get();
 
-        if (empty($movieSiteCategoryRelation)) {
+        if ($movieSiteCategoryRelation->isEmpty()) {
+            Val::getInstance()['container']->logger->error('$websiteId: ' . $websiteId . '没绑定分类不能抓取');
             return '没绑定分类不能抓取';
         }
 
@@ -81,7 +82,7 @@ class SourceMovieWebSite
             $buildParams = http_build_query($params);
             $fullUrl = $webSite->api_url . '?' . $buildParams;
 
-            self::getMovieList($fullUrl, $websiteId, $movieSiteCategoryRelation);
+            self::getMovieList($fullUrl, $websiteId, $movieSiteCategoryRelationArr);
         }
 
 
@@ -126,7 +127,7 @@ class SourceMovieWebSite
 //                }
 //            }
 
-            if ($downloadPicResult) {
+            if (Val::getInstance()['container']['settings']['downloadCover'] && $downloadPicResult) {
                 // 下载成功了就查询图片咯
                 $filePath = self::checkImageExist($fullPath, $savePath);
                 $data['pic'] = $filePath;
@@ -265,13 +266,13 @@ class SourceMovieWebSite
                 }
             }
 
-            $isShow = 1;
-            if ($movieSiteCategoryRelationArr[$tid]['is_show'] == 0 || $movieSiteCategoryRelationArr[$tid]['category_is_show'] == 0) {
-                $isShow = 0;
-            }
-
             $localCategoryId = $movieSiteCategoryRelationArr[$tid]['local_category_id'];
             if ($localCategoryId) {
+                $isShow = 1;
+                if ($movieSiteCategoryRelationArr[$tid]['is_show'] == 0 || $movieSiteCategoryRelationArr[$tid]['category_is_show'] == 0) {
+                    $isShow = 0;
+                }
+
                 $data = [
                     'source_website_id' => $websiteId,
                     'source_website_category_id' => $tid,
