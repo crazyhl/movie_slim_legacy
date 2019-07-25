@@ -81,7 +81,7 @@ class SourceMovieWebSite
 
             $buildParams = http_build_query($params);
             $fullUrl = $webSite->api_url . '?' . $buildParams;
-
+            sleep(rand(1,3));
             self::getMovieList($fullUrl, $websiteId, $movieSiteCategoryRelationArr);
         }
 
@@ -245,7 +245,7 @@ class SourceMovieWebSite
     private static function getMovieList($apiUrl, $websiteId, $movieSiteCategoryRelationArr)
     {
         $client = new Client();
-        $res = $client->request('GET', $apiUrl, ['verify' => false]);
+        $res = $client->request('GET', $apiUrl, ['verify' => false, 'max' => 10, 'timeout' => 30, 'read_timeout' => 30, 'connect_timeout' => 30]);
         $statusCode = $res->getStatusCode();
         if ($statusCode !== 200) {
             return false;
