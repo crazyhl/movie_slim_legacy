@@ -1,0 +1,68 @@
+{% extends "/layout/admin/base.html" %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content" style="padding-top: 16px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                {% if error() %}
+                <p class="bg-red" style="text-align: center; padding: 10px;">{{error()}}</p>
+                {% endif %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            影片列表:&nbsp;
+                        </h3>
+                        <div class="card-tools">
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th style="width: 150px;">封面</th>
+                                <th>名称</th>
+                                <th style="width: 80px;">分类</th>
+                                <th style="width: 80px;">状态</th>
+                                <th style="width: 80px;">操作</th>
+                            </tr>
+                            {% for website in movies.data %}
+                            <tr>
+                                <td>
+                                    <img style="width: 150px;" src="{{website.pic}}" alt="">
+                                </td>
+                                <td>
+                                    {{website.name}} <span class="small">{{website.note}}</span>
+                                    <br />
+                                    <span class="small">{{website.description|striptags}}</span>
+                                </td>
+                                <td>
+                                    {{website.category.name}}
+                                </td>
+                                <td>
+                                    {{website.is_show ? '开启' : '关闭'}}
+                                </td>
+
+                                <td>
+                                    <a href="{{ path_for('adminMovieWebSiteEdit', {}, {'id':website.id}) }}" class="badge badge-primary">编辑</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        {{links (movies, true, 'float-right')}}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    </div>
+</section>
+
+{% endblock %}

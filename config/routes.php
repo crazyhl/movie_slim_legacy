@@ -2,6 +2,7 @@
 
 use App\Controller\Admin\Auth;
 use App\Controller\Admin\Category;
+use App\Controller\Admin\Movie;
 use App\Controller\Admin\MovieWebsite;
 use App\Middleware\AlreadyLogin;
 use App\Middleware\NeedLogin;
@@ -37,6 +38,11 @@ return function (App $app) {
                 ->add(new Validate($container, new EditCategoryValidator()));
             $app->delete('delete', Category::class . ':delete')->setName('adminCategoryDelete')
                 ->add(new Validate($container, new DeleteCategoryValidator()));
+        });
+
+        $app->group('/movie', function (App $app) {
+            $container = $app->getContainer();
+            $app->get('', Movie::class . ':index')->setName('adminMovie');
         });
 
         $app->group('/movie-website', function (App $app) {

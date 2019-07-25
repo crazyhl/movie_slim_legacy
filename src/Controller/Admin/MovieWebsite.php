@@ -26,7 +26,7 @@ class MovieWebsite extends Base
      */
     public function index(Request $request, Response $response)
     {
-        $movieWebsites = SourceMovieWebsite::myPaginate(3);
+        $movieWebsites = SourceMovieWebsite::myPaginate(10);
 
         $this->setTitle('影视源网站管理');
 
