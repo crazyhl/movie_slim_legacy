@@ -118,9 +118,9 @@ class SourceMovieWebSite
             // 重试机制
 //            for ($i = 0; $i < 5; $i++) {
 
-            if ($data['pic']) {
-                $downloadPicResult = self::downloadMovieImage($data['pic'], $fullFileDir . $picFileName . '.tmp');
-            }
+//            if ($data['pic']) {
+//                $downloadPicResult = self::downloadMovieImage($data['pic'], $fullFileDir . $picFileName . '.tmp');
+//            }
 //                if ($downloadPicResult) {
 //                    break;
 //                }
