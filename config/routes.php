@@ -43,6 +43,7 @@ return function (App $app) {
         $app->group('/movie', function (App $app) {
             $container = $app->getContainer();
             $app->get('', Movie::class . ':index')->setName('adminMovie');
+            $app->get('edit', Movie::class . ':sourceMovieList')->setName('adminMovieEdit');
         });
 
         $app->group('/movie-website', function (App $app) {

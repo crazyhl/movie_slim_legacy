@@ -1,0 +1,57 @@
+{% extends "/layout/admin/base.html" %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content" style="padding-top: 16px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                {% if error() %}
+                <p class="bg-red" style="text-align: center; padding: 10px;">{{error()}}</p>
+                {% endif %}
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            源影片列表:&nbsp;{{movie.name}}
+                        </h3>
+                        <div class="card-tools">
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th style="width: 150px;">封面</th>
+                                <th>名称</th>
+                                <th>详情</th>
+                            </tr>
+                            {% for sourceMovie in movie.sourceMovies %}
+                            <tr>
+                                <td>
+                                    <img style="width: 150px;" src="{{sourceMovie.pic}}" alt="">
+                                </td>
+                                <td>
+                                    {{sourceMovie.name}} <span class="small">{{sourceMovie.note}}</span>
+                                    <br />
+                                    <span class="small">{{sourceMovie.description|striptags}}</span>
+                                </td>
+                                <td>
+                                    {% for movieInfo in sourceMovie.format_movie_list %}
+                                    {{movieInfo.name}}: {{movieInfo.url}}<br />
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    </div>
+</section>
+
+{% endblock %}

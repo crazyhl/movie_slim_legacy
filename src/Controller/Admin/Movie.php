@@ -36,8 +36,9 @@ class Movie extends Base
         if ($movieId == 0) {
             return $response->withRedirect($this->container->router->pathFor('adminMovie'), 200);
         }
-        $website = MovieModel::with('sourceMovies')->find($movieId);
-        return $this->display($response, 'admin/movie_website/edit.html'
-            , compact('website'));
+        $movie = MovieModel::with(['sourceMovies', 'category'])->find($movieId);
+
+        return $this->display($response, 'admin/movie/source_list.html'
+            , compact('movie'));
     }
 }
