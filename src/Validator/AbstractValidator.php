@@ -109,7 +109,7 @@ abstract class AbstractValidator
             }
 
             // 如果设定了类型，则选用自定义的类型
-            if ($fieldRule['type']) {
+            if (isset($fieldRule['type']) && $fieldRule['type']) {
                 $fieldType = $fieldRule['type'];
             }
 
