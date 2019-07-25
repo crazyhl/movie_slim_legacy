@@ -250,7 +250,7 @@ class SourceMovieWebSite
         if ($statusCode !== 200) {
             return false;
         }
-        Val::getInstance()['container']->logger->error('apiUrl' . $apiUrl);
+//        Val::getInstance()['container']->logger->error('apiUrl' . $apiUrl);
         // 获取总页数
         $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
         $list = $bodyElement->list;
