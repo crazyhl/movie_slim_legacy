@@ -266,6 +266,10 @@ class SourceMovieWebSite
                 }
             }
 
+            if (!isset($movieSiteCategoryRelationArr[$tid])) {
+                $tid = 1;
+            }
+
             $localCategoryId = $movieSiteCategoryRelationArr[$tid]['local_category_id'];
             if ($localCategoryId) {
                 $isShow = 1;
