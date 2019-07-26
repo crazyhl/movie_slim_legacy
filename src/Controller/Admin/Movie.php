@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 
 use App\Controller\Base;
+use App\Model\SourceMovie;
 use App\Model\SourceMovieWebsite;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -69,5 +70,30 @@ class Movie extends Base
         }
 
         return $response->withRedirect($this->container->router->pathFor('adminMovieEdit', [], ['id' => $movieId]), 200);
+    }
+
+    public function useSourceInfo(Request $request, Response $response)
+    {
+        $sourceMovieId = $request->getQueryParam('id', 0);
+        // 如果分类id为空就跳转到新增
+        if ($sourceMovieId == 0) {
+            return $response->withRedirect($this->container->router->pathFor('adminMovie'), 200);
+        }
+        $sourceMovie = SourceMovie::with('localMovie')->find($sourceMovieId);
+
+        if (empty($sourceMovie)) {
+            return $response->withRedirect($this->container->router->pathFor('adminMovie'), 200);
+        }
+
+        $fieldName = $request->getQueryParam('field', '');
+        if ($fieldName) {
+            $localMovie = $sourceMovie->localMovie;
+            if ($localMovie) {
+                $localMovie->$fieldName = $sourceMovie->$fieldName;
+                $localMovie->save();
+            }
+        }
+
+        return $response->withRedirect($this->container->router->pathFor('adminMovieEdit', [], ['id' => $sourceMovie->localMovie->id]), 200);
     }
 }
