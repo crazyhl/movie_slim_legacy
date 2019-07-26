@@ -41,4 +41,33 @@ class Movie extends Base
         return $this->display($response, 'admin/movie/source_list.html'
             , compact('movie'));
     }
+
+    public function changeField(Request $request, Response $response)
+    {
+        $movieId = $request->getQueryParam('id', 0);
+        // 如果分类id为空就跳转到新增
+        if ($movieId == 0) {
+            return $response->withRedirect($this->container->router->pathFor('adminMovie'), 200);
+        }
+        $movie = MovieModel::find($movieId);
+
+        if (empty($movie)) {
+            return $response->withRedirect($this->container->router->pathFor('adminMovie'), 200);
+        }
+
+        $fieldName = $request->getQueryParam('field', '');
+        $value = $request->getQueryParam('value', null);
+        if ($fieldName && $value !== null) {
+            if ($fieldName == 'is_show') {
+                if ($value != 0) {
+                    $value = 1;
+                }
+            }
+
+            $movie->$fieldName = $value;
+            $movie->save();
+        }
+
+        return $response->withRedirect($this->container->router->pathFor('adminMovieEdit', [], ['id' => $movieId]), 200);
+    }
 }

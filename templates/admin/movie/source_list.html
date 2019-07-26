@@ -16,18 +16,63 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                            源影片列表:&nbsp;{{movie.name}}
+                            编辑影片:&nbsp;{{movie.name}}
                         </h3>
                         <div class="card-tools">
+
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <table class="table table-bordered mb-4">
+                            <tr>
+                                <th colspan="4">
+                                    {{movie.name}} <span class="small">{{movie.note}}</span>
+                                    &nbsp;
+                                    状态: {{movie.is_show ? '开启' : '关闭'}}
+                                    <a href="{{ path_for('adminMovieChangeField', {}, {'id':movie.id, 'field': 'is_show', 'value': 1}) }}" class="badge badge-primary">显示</a>
+                                    <a href="{{ path_for('adminMovieChangeField', {}, {'id':movie.id, 'field': 'is_show', 'value': 0}) }}" class="badge badge-danger">关闭</a>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td rowspan="3" style="width: 150px;">
+                                    <img style="width: 150px;" src="{{movie.pic}}" alt="">
+                                </td>
+                                <td>
+                                    分类：{{movie.category.name}}
+                                </td>
+
+                                <td>
+                                    演员: {{movie.actor}}
+                                </td>
+                                <td>
+                                    导演：{{movie.director}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    年份: {{movie.year}}
+                                </td>
+                                <td>
+                                    地区：{{movie.area}}
+                                </td>
+                                <td>
+                                    语言：{{movie.lang}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    简介: {{movie.description|striptags}}
+                                </td>
+                            </tr>
+
+
+                        </table>
                         <table class="table table-bordered table-striped">
                             <tr>
                                 <th style="width: 150px;">封面</th>
                                 <th>名称</th>
-                                <th>详情</th>
+                                <th>列表</th>
                             </tr>
                             {% for sourceMovie in movie.sourceMovies %}
                             <tr>
@@ -36,12 +81,12 @@
                                 </td>
                                 <td>
                                     {{sourceMovie.name}} <span class="small">{{sourceMovie.note}}</span>
-                                    <br />
+                                    <br/>
                                     <span class="small">{{sourceMovie.description|striptags}}</span>
                                 </td>
                                 <td>
                                     {% for movieInfo in sourceMovie.format_movie_list %}
-                                    {{movieInfo.name}}: {{movieInfo.url}}<br />
+                                    {{movieInfo.name}}: {{movieInfo.url}}<br/>
                                     {% endfor %}
                                 </td>
                             </tr>

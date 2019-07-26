@@ -31,25 +31,25 @@
                                 <th style="width: 80px;">状态</th>
                                 <th style="width: 80px;">操作</th>
                             </tr>
-                            {% for website in movies.data %}
+                            {% for movie in movies.data %}
                             <tr>
                                 <td>
-                                    <img style="width: 150px;" src="{{website.pic}}" alt="">
+                                    <img style="width: 150px;" src="{{movie.pic}}" alt="">
                                 </td>
                                 <td>
-                                    {{website.name}} <span class="small">{{website.note}}</span>
+                                    {{movie.name}} <span class="small">{{movie.note}}</span>
                                     <br />
-                                    <span class="small">{{website.description|striptags}}</span>
+                                    <span class="small">{{movie.description|striptags}}</span>
                                 </td>
                                 <td>
-                                    {{website.category.name}}
+                                    {{movie.category.name}}
                                 </td>
                                 <td>
-                                    {{website.is_show ? '开启' : '关闭'}}
+                                    {{movie.is_show ? '开启' : '关闭'}}
                                 </td>
 
                                 <td>
-                                    <a href="{{ path_for('adminMovieWebSiteEdit', {}, {'id':website.id}) }}" class="badge badge-primary">编辑</a>
+                                    <a href="{{ path_for('adminMovieEdit', {}, {'id':movie.id}) }}" class="badge badge-primary">编辑</a>
                                 </td>
                             </tr>
                             {% endfor %}
