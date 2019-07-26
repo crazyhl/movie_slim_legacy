@@ -252,7 +252,7 @@ class SourceMovieWebSite
         }
 //        Val::getInstance()['container']->logger->error('apiUrl' . $apiUrl);
         // 获取总页数
-        $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
+        $bodyElement = new \SimpleXMLElement(preg_replace('#&(?=[a-z_0-9]+=)#', '&amp;',$res->getBody()->getContents()));
         $list = $bodyElement->list;
         // 保存当前影片
         foreach ($list->children() as $video) {
