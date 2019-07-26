@@ -68,23 +68,49 @@
 
 
                         </table>
-                        <table class="table table-bordered table-striped">
+                        <table class="table table-bordered">
                             <tr>
-                                <th style="width: 150px;">封面</th>
-                                <th>名称</th>
-                                <th>列表</th>
+                                <th colspan="4">
+                                    源视频列表
+                                </th>
                             </tr>
                             {% for sourceMovie in movie.sourceMovies %}
                             <tr>
-                                <td>
+                                <td colspan="4">
+                                    {{sourceMovie.name}} <span class="small">{{sourceMovie.note}}</span> <a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'note'}) }}" class="badge badge-primary">采用</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4" style="width: 150px;">
                                     <img style="width: 150px;" src="{{sourceMovie.pic}}" alt="">
+                                    <br />
+                                    <a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'pic'}) }}" class="badge badge-primary">采用</a>
+                                </td>
+                                <td colspan="2">
+                                    演员: {{sourceMovie.actor}}<a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'actor'}) }}" class="badge badge-primary">采用</a>
                                 </td>
                                 <td>
-                                    {{sourceMovie.name}} <span class="small">{{sourceMovie.note}}</span>
-                                    <br/>
-                                    <span class="small">{{sourceMovie.description|striptags}}</span>
+                                    导演：{{sourceMovie.director}}<a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'director'}) }}" class="badge badge-primary">采用</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    年份: {{sourceMovie.year}}<a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'year'}) }}" class="badge badge-primary">采用</a>
                                 </td>
                                 <td>
+                                    地区：{{sourceMovie.area}}<a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'area'}) }}" class="badge badge-primary">采用</a>
+                                </td>
+                                <td>
+                                    语言：{{sourceMovie.lang}}<a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'lang'}) }}" class="badge badge-primary">采用</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    简介: {{sourceMovie.description|striptags}}<a href="{{ path_for('adminMovieUseSourceInfo', {}, {'id':sourceMovie.id, 'field': 'description'}) }}" class="badge badge-primary">采用</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
                                     {% for movieInfo in sourceMovie.format_movie_list %}
                                     {{movieInfo.name}}: {{movieInfo.url}}<br/>
                                     {% endfor %}

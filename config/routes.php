@@ -45,6 +45,7 @@ return function (App $app) {
             $app->get('', Movie::class . ':index')->setName('adminMovie');
             $app->get('/edit', Movie::class . ':sourceMovieList')->setName('adminMovieEdit');
             $app->get('/changeField', Movie::class . ':changeField')->setName('adminMovieChangeField');
+            $app->get('/useSourceInfo', Movie::class . ':useSourceInfo')->setName('adminMovieUseSourceInfo');
         });
 
         $app->group('/movie-website', function (App $app) {

@@ -29,7 +29,10 @@ class MovieWebsite extends Base
         $movieWebsites = SourceMovieWebsite::myPaginate(10);
 
         $this->setTitle('影视源网站管理');
-
+        echo '<pre>';
+        var_dump($movieWebsites);
+        echo '</pre>';
+        exit();
         return $this->display($response, 'admin/movie_website/index.html'
             , compact('movieWebsites'));
     }
