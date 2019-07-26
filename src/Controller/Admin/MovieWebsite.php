@@ -11,7 +11,6 @@ use App\Model\MovieSiteCategoryRelation;
 use App\Model\SourceMovieWebsite;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use phpDocumentor\Reflection\Types\Object_;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Service\Category as CategoryService;
@@ -29,10 +28,7 @@ class MovieWebsite extends Base
         $movieWebsites = SourceMovieWebsite::myPaginate(10);
 
         $this->setTitle('影视源网站管理');
-        echo '<pre>';
-        var_dump($movieWebsites);
-        echo '</pre>';
-        exit();
+
         return $this->display($response, 'admin/movie_website/index.html'
             , compact('movieWebsites'));
     }
