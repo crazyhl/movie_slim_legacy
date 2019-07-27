@@ -3,8 +3,8 @@
 {% block css %}
 <link href="/dplayer/DPlayer.min.css" rel="stylesheet">
 <style>
-    #dplayer{
-        /*display: none;*/
+    #video{
+        display: none;
     }
 </style>
 {% endblock %}
@@ -51,7 +51,7 @@
         // });
         $('.playBtn').click(function() {
             let url = $(this).data('url');
-            $("#dplayer").css('display', 'block');
+            $("#video").css('display', 'block');
             var videoObject = {
                 container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
                 variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
