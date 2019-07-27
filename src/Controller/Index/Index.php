@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Index;
 
 
+use App\Controller\Base;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

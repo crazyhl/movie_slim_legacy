@@ -6,6 +6,7 @@ use App\Controller\Admin\Category;
 use App\Controller\Admin\Movie;
 use App\Controller\Admin\MovieWebsite;
 use App\Controller\Admin\User;
+use App\Controller\Index\Index;
 use App\Middleware\AlreadyLogin;
 use App\Middleware\NeedLogin;
 use App\Middleware\Validate;
@@ -30,7 +31,7 @@ return function (App $app) {
     $app->post('/login', IndexAuth::class . ':loginAction')->setName('indexLoginAction');
 
     $app->group('/', function (App $app) {
-
+        $app->get('', Index::class . ':index')->setName('index');
     })->add(new NeedLogin($container));
     $app->group('/admin', function (App $app) {
         $app->get('', AdminIndex::class . ':index')->setName('admin');

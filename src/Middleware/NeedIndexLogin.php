@@ -8,7 +8,7 @@ use App\Middleware\CustomTrait\CheckIsLogin;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class NeedLogin extends Base
+class NeedIndexLogin extends Base
 {
     use CheckIsLogin;
     /**
