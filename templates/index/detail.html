@@ -3,9 +3,9 @@
 {% block css %}
 <link href="/dplayer/DPlayer.min.css" rel="stylesheet">
 <style>
-    /*#dplayer{*/
-    /*    !*display: none;*!*/
-    /*}*/
+    #dplayer{
+        /*display: none;*/
+    }
 </style>
 {% endblock %}
 
@@ -14,7 +14,7 @@
     <a href="{{ path_for('index')}}">首页</a>
     <div class="row">
         <div class="col-sm-3">
-            <div><img src="{{movie.pic}}" style="height: 200px;"></div>
+            <div><img src="{{movie.pic}}" style="height: 240px;"></div>
         </div>
         <div class="col-sm-9">
             <div>
@@ -51,7 +51,7 @@
         // });
         $('.playBtn').click(function() {
             let url = $(this).data('url');
-            // $("#dplayer").css('display', 'block');
+            $("#dplayer").css('display', 'block');
             var videoObject = {
                 container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
                 variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
