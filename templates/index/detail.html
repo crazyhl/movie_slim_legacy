@@ -10,25 +10,36 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    <div><img src="{{movie.pic}}" alt=""></div>
-    <div>
-        {{movie.name}} <span class="small">{{movie.note}}</span><br />
-        {{movie.category.name}} {{movie.director}} {{movie.actor}} {{movie.lang}} {{movie.area}} {{movie.year}}<br />
-        <span class="small">{{movie.description}}</span>
+<div class="container">
+    <a href="{{ path_for('index')}}">首页</a>
+    <div class="row">
+        <div class="col-sm-3">
+            <div><img src="{{movie.pic}}" alt="""></div>
+        </div>
+        <div class="col-sm-9">
+            <div>
+                {{movie.name}} <span class="small">{{movie.note}}</span><br />
+                {{movie.category.name}} {{movie.director}} {{movie.actor}} {{movie.lang}} {{movie.area}} {{movie.year}}<br />
+                <span class="small">{{movie.description}}</span>
+            </div>
+        </div>
     </div>
-</div>
-{% for sourceMovie in movie.sourceMovies %}
-<div class="card">
-    <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
-    <div class="card-body">
-        {% for movieList in sourceMovie.format_movie_list %}
-        <button type="button" class="btn btn-primary btn-sm playBtn" data-url="{{movieList.url}}">{{movieList.name}}</button>
+    <div class="row">
+        {% for sourceMovie in movie.sourceMovies %}
+        <div class="card">
+            <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
+            <div class="card-body">
+                {% for movieList in sourceMovie.format_movie_list %}
+                <button type="button" class="btn btn-primary btn-sm playBtn" data-url="{{movieList.url}}">{{movieList.name}}</button>
+                {% endfor %}
+            </div>
+        </div>
         {% endfor %}
     </div>
+    <div id="video" style="width:600px;height:400px;"></div>
 </div>
-<div id="video" style="width:600px;height:400px;"></div>
-{% endfor %}
+
+
 {% endblock %}
 {% block js %}
 <!--<script src="/js/hls.min.js"></script>-->
