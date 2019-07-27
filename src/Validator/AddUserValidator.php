@@ -5,11 +5,11 @@ namespace App\Validator;
 
 
 
-use App\Model\Category;
+use App\Model\User;
 
 class AddUserValidator extends AbstractValidator
 {
-    protected $model = Category::class;
+    protected $model = User::class;
 
     /**
      * 保存条件的数组

@@ -33,53 +33,44 @@ class User extends Base
 
     public function save(Request $request, Response $response)
     {
-//        $category = new CategoryModel();
-//        $category->name = $request->getParsedBodyParam('name');
-//        $category->slug = $request->getParsedBodyParam('slug');
-//        $category->parent_id = $request->getParsedBodyParam('parent_id');
-//        $category->is_show = $request->getParsedBodyParam('is_show');
-//        $category->order = $request->getParsedBodyParam('order');
-//
-//        $category->save();
+        $user = new UserModel();
+        $user->username = $request->getParsedBodyParam('username');
+        $user->password = password_hash($request->getParsedBodyParam('password'), PASSWORD_DEFAULT);
+        $user->is_admin = 0;
 
-        return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
+        $user->save();
+        return $response->withRedirect($this->container->router->pathFor('adminUser'), 200);
     }
 
     public function edit(Request $request, Response $response)
     {
-//
-//        $category = CategoryModel::find($categoryId);
-//
-//        $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
-//        $categories = CategoryService::groupCategory($categories);
-//        $categories = CategoryService::groupToTree($categories);
-        return $this->display($response, 'admin/category/edit.html'
-            , compact('category', 'categories'));
+        $uid = $request->getQueryParam('id');
+
+        $user = UserModel::find($uid);
+        return $this->display($response, 'admin/user/edit.html'
+            , compact('user'));
     }
 
     public function update(Request $request, Response $response)
     {
-        $categoryId = $request->getParsedBodyParam('id', 0);
-        if ($categoryId != 0) {
-//            $category = CategoryModel::find($categoryId);
-//
-//            $category->name = $request->getParsedBodyParam('name');
-//            $category->slug = $request->getParsedBodyParam('slug');
-//            $category->parent_id = $request->getParsedBodyParam('parent_id');
-//            $category->is_show = $request->getParsedBodyParam('is_show');
-//            $category->order = $request->getParsedBodyParam('order');
-//
-//            $category->save();
+        $uid = $request->getParsedBodyParam('id');
+        $user = UserModel::find($uid);
+        if ($user != 0) {
+            $user->username = $request->getParsedBodyParam('username');
+            $user->password = password_hash($request->getParsedBodyParam('password'), PASSWORD_DEFAULT);
+
+            $user->save();
         }
 
-        return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
+        return $response->withRedirect($this->container->router->pathFor('adminUser'), 200);
     }
 
     public function delete(Request $request, Response $response)
     {
 //        $categoryId = $request->getParsedBodyParam('id', 0);
 //        CategoryModel::where('id', $categoryId)->delete();
-
-        return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
+        $uid = $request->getParsedBodyParam('id');
+        UserModel::where('id', $uid)->delete();
+        return $response->withRedirect($this->container->router->pathFor('adminUser'), 200);
     }
 }
