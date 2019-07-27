@@ -10,7 +10,8 @@ use Slim\Http\Request;
 
 trait CheckIsLogin
 {
-    public function isLogin(Request $request){
+    public function isLogin(Request $request, $isAdmin = false)
+    {
         $header = $request->getHeader('cookie');
         $cookies = Cookies::parseHeader($header);
         if ($cookies['token']) {
@@ -22,8 +23,12 @@ trait CheckIsLogin
             $cipherTextRaw = substr($cipherText, $ivLen + $sha2Len);
             $loginToken = openssl_decrypt($cipherTextRaw, getenv('CRYPT_METHOD'), getenv('APP_KEY'), OPENSSL_RAW_DATA, $iv);
             list($uid,) = explode('-', $loginToken);
-            $loginUser = User::where('token', $loginToken)->first();
-            if ($loginUser && $_SESSION['uid'] == $uid) {
+            $loginUserQuery = User::where('token', $loginToken);
+            if ($isAdmin) {
+                $loginUserQuery->where('is_admin', 1);
+            }
+            $loginUser = $loginUserQuery->first();
+            if ($loginUser && $_SESSION['uid'] == $uid && $loginUser->is_admin == 1) {
                 // 已登录
                 if (empty($_SESSION['uid'])) {
                     // 如果是 remember 则要初始化 session

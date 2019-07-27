@@ -8,7 +8,7 @@ use App\Middleware\CustomTrait\CheckIsLogin;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class NeedIndexLogin extends Base
+class NeedLogin extends Base
 {
     use CheckIsLogin;
     /**
@@ -22,8 +22,8 @@ class NeedIndexLogin extends Base
      */
     public function __invoke($request, $response, $next)
     {
-        if (!$this->isLogin($request)) {
-            return $response->withRedirect($this->container->get('router')->pathFor('indexLogin'));
+        if (!$this->isLogin($request, true)) {
+            return $response->withRedirect($this->container->get('router')->pathFor('adminLogin'));
         }
 
         // 如果有token 还需要跟 session 对比啥的

@@ -1,6 +1,7 @@
 <?php
 
 use App\Controller\Admin\Auth;
+use App\Controller\Index\Auth as IndexAuth;
 use App\Controller\Admin\Category;
 use App\Controller\Admin\Movie;
 use App\Controller\Admin\MovieWebsite;
@@ -24,7 +25,13 @@ return function (App $app) {
 
     $app->get('/admin/login', Auth::class . ':login')->setName('adminLogin')->add(new AlreadyLogin($container));
     $app->post('/admin/login', Auth::class . ':loginAction')->setName('adminLoginAction');
-    $app->get('/test', MovieWebsite::class . ':test');
+
+    $app->get('/login', IndexAuth::class . ':login')->setName('indexLogin');
+    $app->post('/login', IndexAuth::class . ':loginAction')->setName('indexLoginAction');
+
+    $app->group('/', function (App $app) {
+
+    })->add(new NeedLogin($container));
     $app->group('/admin', function (App $app) {
         $app->get('', AdminIndex::class . ':index')->setName('admin');
         $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');

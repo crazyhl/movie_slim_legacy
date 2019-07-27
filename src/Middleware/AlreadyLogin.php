@@ -24,7 +24,7 @@ class AlreadyLogin extends Base
     {
         $referer = $request->getQueryParam('ref', $request->getHeader('HTTP_REFERER') ?: 'admin');
 
-        if ($this->isLogin($request)) {
+        if ($this->isLogin($request, true)) {
             return $response->withRedirect($this->container->get('router')->pathFor($referer));
         }
 
