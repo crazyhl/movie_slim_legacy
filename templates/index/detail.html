@@ -1,0 +1,56 @@
+{% extends "/layout/index/base.html" %}
+
+{% block css %}
+<link href="/dplayer/DPlayer.min.css" rel="stylesheet">
+<style>
+    /*#dplayer{*/
+    /*    !*display: none;*!*/
+    /*}*/
+</style>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div><img src="{{movie.pic}}" alt=""></div>
+    <div>
+        {{movie.name}} <span class="small">{{movie.note}}</span><br />
+        {{movie.category.name}} {{movie.director}} {{movie.actor}} {{movie.lang}} {{movie.area}} {{movie.year}}<br />
+        <span class="small">{{movie.description}}</span>
+    </div>
+</div>
+{% for sourceMovie in movie.sourceMovies %}
+<div class="card">
+    <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
+    <div class="card-body">
+        {% for movieList in sourceMovie.format_movie_list %}
+        <button type="button" class="btn btn-primary btn-sm playBtn" data-url="{{movieList.url}}">{{movieList.name}}</button>
+        {% endfor %}
+    </div>
+</div>
+<div id="video" style="width:600px;height:400px;"></div>
+{% endfor %}
+{% endblock %}
+{% block js %}
+<!--<script src="/js/hls.min.js"></script>-->
+<!--<script src="/dplayer/DPlayer.min.js"></script>-->
+<script src="/ckplayer/ckplayer.js"></script>
+
+<script>
+    $(function(){
+        // const dp = new DPlayer({
+        //     container: document.getElementById('dplayer')
+        // });
+        $('.playBtn').click(function() {
+            let url = $(this).data('url');
+            // $("#dplayer").css('display', 'block');
+            var videoObject = {
+                container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
+                variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+                flashplayer:false,//如果强制使用flashplayer则设置成true
+                video:url//视频地址
+            };
+            var player=new ckplayer(videoObject);
+        });
+    });
+</script>
+{% endblock %}

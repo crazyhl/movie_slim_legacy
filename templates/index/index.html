@@ -1,0 +1,21 @@
+{% extends "/layout/index/base.html" %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<form action="{{ path_for('indexPost')}}" method="post" >
+    <input type="text" name="word">
+    <button>搜索</button>
+</form>
+
+<ul>
+    {% for movie in movies %}
+    <li><a href="{{ path_for('indexDetail', {}, {'id': movie.id})}}">{{movie.name}}</a></li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

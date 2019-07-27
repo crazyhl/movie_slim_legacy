@@ -12,6 +12,11 @@ class SourceMovie extends Base
         return $this->belongsTo(Movie::class, 'name_md5', 'name_md5');
     }
 
+    public function sourceWebsite()
+    {
+        return $this->belongsTo(SourceMovieWebsite::class, 'source_website_id', 'id');
+    }
+
     public function getFormatMovieListAttribute($value)
     {
         $replaceArr = [
