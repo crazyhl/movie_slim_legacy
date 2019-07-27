@@ -24,10 +24,10 @@ class Auth extends Base
      */
     public function login(Request $request, Response $response)
     {
-        $this->setTitle('后台登录');
+        $this->setTitle('登录');
 
-        return $this->view->render($response, 'admin/login.html', [
-            'formTitle' => '后台登录',
+        return $this->view->render($response, 'index/login.html', [
+            'formTitle' => '登录',
         ]);
     }
 
@@ -47,7 +47,7 @@ class Auth extends Base
 
         $error = '';
         // 通过用户名密码，检测用户名密码是否正确
-        $user = User::where('username', $username)->where('is_admin', 0)->first();
+        $user = User::where('username', $username)->first();
         if ($user) {
             if (password_verify($password, $user->password)) {
                 $expire = 0;
@@ -55,18 +55,15 @@ class Auth extends Base
                 $uid = $user->id;
                 $token = $uid . '-' . $requestTime;
 
-                $needUpdateDb = false;
                 // 如果需要重新hash 则重新设置一下 密码 hash
                 if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
                     $user->password = password_hash($password, PASSWORD_DEFAULT);
-                    $needUpdateDb = true;
                 }
 
+                // 长期保存把 token 放到数据库中
+                $user->token = $token;
                 // 通过 remember 判定是否长期留存用户cookie
                 if (strtolower($isRemember) == 'on') {
-                    // 长期保存把 token 放到数据库中
-                    $user->token = $token;
-                    $needUpdateDb = true;
                     // 一年有效期
                     $expire = time() + 86400 * 365;
                 }
@@ -88,11 +85,8 @@ class Auth extends Base
                 $_SESSION['uid'] = $user->id;
                 $_SESSION['user'] = $user;
 
-                if ($needUpdateDb) {
-                    $user->save();
-                }
-
-                return $response->withRedirect($this->container->get('router')->pathFor('admin'))->withHeader('Set-Cookie', $cookies->toHeaders());
+                $user->save();
+                return $response->withRedirect($this->container->get('router')->pathFor('index'))->withHeader('Set-Cookie', $cookies->toHeaders());
             } else {
                 $error = '密码不正确';
             }
@@ -100,7 +94,7 @@ class Auth extends Base
             $error = '用户不存在';
         }
 
-        return $this->view->render($response, 'admin/login.html', [
+        return $this->view->render($response, 'login.html', [
             'formTitle' => '登录',
             'error' => $error,
             'isRemember' => $isRemember,

@@ -14,6 +14,7 @@ trait CheckIsLogin
     {
         $header = $request->getHeader('cookie');
         $cookies = Cookies::parseHeader($header);
+
         if ($cookies['token']) {
             // 有已登录数据，校验数据是否正确
             $cipherText = base64_decode($cookies['token']);

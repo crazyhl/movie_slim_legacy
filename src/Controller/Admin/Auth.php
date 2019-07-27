@@ -55,18 +55,15 @@ class Auth extends Base
                 $uid = $user->id;
                 $token = $uid . '-' . $requestTime;
 
-                $needUpdateDb = false;
                 // 如果需要重新hash 则重新设置一下 密码 hash
                 if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
                     $user->password = password_hash($password, PASSWORD_DEFAULT);
-                    $needUpdateDb = true;
                 }
 
+                // 长期保存把 token 放到数据库中
+                $user->token = $token;
                 // 通过 remember 判定是否长期留存用户cookie
                 if (strtolower($isRemember) == 'on') {
-                    // 长期保存把 token 放到数据库中
-                    $user->token = $token;
-                    $needUpdateDb = true;
                     // 一年有效期
                     $expire = time() + 86400 * 365;
                 }
@@ -88,9 +85,7 @@ class Auth extends Base
                 $_SESSION['uid'] = $user->id;
                 $_SESSION['user'] = $user;
 
-                if ($needUpdateDb) {
-                    $user->save();
-                }
+                $user->save();
 
                 return $response->withRedirect($this->container->get('router')->pathFor('admin'))->withHeader('Set-Cookie', $cookies->toHeaders());
             } else {

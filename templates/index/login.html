@@ -21,7 +21,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="/admin/login">{{ formTitle }}</a>
+        <a href="/login">{{ formTitle }}</a>
     </div>
     <!-- /.login-logo -->
     <div class="card">
@@ -30,9 +30,9 @@
             <p class="bg-red" style="text-align: center; padding: 10px;">{{error}}</p>
             {% endif %}
 
-            <form action="/admin/login" method="post">
+            <form action="/login" method="post">
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" name="username" value="{{ oldUsername | default('')}}" placeholder="邮箱">
+                    <input type="text" class="form-control" name="username" value="{{ oldUsername | default('')}}" placeholder="邮箱">
                     <div class="input-group-append input-group-text">
                         <span class="fas fa-envelope"></span>
                     </div>

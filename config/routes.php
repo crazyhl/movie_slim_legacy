@@ -7,7 +7,9 @@ use App\Controller\Admin\Movie;
 use App\Controller\Admin\MovieWebsite;
 use App\Controller\Admin\User;
 use App\Controller\Index\Index;
+use App\Middleware\AlreadyIndexLogin;
 use App\Middleware\AlreadyLogin;
+use App\Middleware\NeedIndexLogin;
 use App\Middleware\NeedLogin;
 use App\Middleware\Validate;
 use App\Validator\AddCategoryValidator;
@@ -27,12 +29,15 @@ return function (App $app) {
     $app->get('/admin/login', Auth::class . ':login')->setName('adminLogin')->add(new AlreadyLogin($container));
     $app->post('/admin/login', Auth::class . ':loginAction')->setName('adminLoginAction');
 
-    $app->get('/login', IndexAuth::class . ':login')->setName('indexLogin');
+    $app->get('/login', IndexAuth::class . ':login')->setName('indexLogin')->add(new AlreadyIndexLogin($container));
     $app->post('/login', IndexAuth::class . ':loginAction')->setName('indexLoginAction');
 
     $app->group('/', function (App $app) {
         $app->get('', Index::class . ':index')->setName('index');
-    })->add(new NeedLogin($container));
+        $app->post('', Index::class . ':search')->setName('indexPost');
+
+        $app->get('detail', Index::class . ':detail')->setName('indexDetail');
+    })->add(new NeedIndexLogin($container));
     $app->group('/admin', function (App $app) {
         $app->get('', AdminIndex::class . ':index')->setName('admin');
         $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');
