@@ -4,14 +4,17 @@ use App\Controller\Admin\Auth;
 use App\Controller\Admin\Category;
 use App\Controller\Admin\Movie;
 use App\Controller\Admin\MovieWebsite;
+use App\Controller\Admin\User;
 use App\Middleware\AlreadyLogin;
 use App\Middleware\NeedLogin;
 use App\Middleware\Validate;
 use App\Validator\AddCategoryValidator;
 use App\Validator\AddSourceMovieWebsiteValidator;
+use App\Validator\AddUserValidator;
 use App\Validator\DeleteCategoryValidator;
 use App\Validator\EditCategoryValidator;
 use App\Validator\EditSourceMovieWebsiteValidator;
+use App\Validator\EditUserValidator;
 use Slim\App;
 use App\Controller\Admin\Index as AdminIndex;
 
@@ -38,6 +41,19 @@ return function (App $app) {
                 ->add(new Validate($container, new EditCategoryValidator()));
             $app->delete('delete', Category::class . ':delete')->setName('adminCategoryDelete')
                 ->add(new Validate($container, new DeleteCategoryValidator()));
+        });
+
+        $app->group('/users', function (App $app) {
+            $container = $app->getContainer();
+            $app->get('', User::class . ':index')->setName('adminUser');
+            $app->get('/add', User::class . ':add')->setName('adminUserAdd');
+            $app->get('/edit', User::class . ':edit')->setName('adminUserEdit');
+            $app->post('/save', User::class . ':save')->setName('adminUserSave')
+                ->add(new Validate($container, new AddUserValidator()));
+
+            $app->post('/update', User::class . ':update')->setName('adminUserUpdate')
+                ->add(new Validate($container, new EditUserValidator()));
+            $app->delete('delete', User::class . ':delete')->setName('adminUserDelete');
         });
 
         $app->group('/movie', function (App $app) {

@@ -15,9 +15,9 @@
                         <h3 class="card-title">编辑分类</h3>
                     </div>
                     <!-- /.card-header -->
-                    <form role="form" method="post" action="{{path_for('adminCategoryUpdate')}}">
-                        {{ include('admin/category/_form.html') }}
-                        <input type="hidden" name="id" value="{{category.id}}">
+                    <form role="form" method="post" action="{{path_for('adminUserUpdate')}}">
+                        {{ include('admin/user/_form.html') }}
+                        <input type="hidden" name="id" value="{{user.id}}">
                     </form>
                 </div>
             </div>

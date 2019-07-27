@@ -12,12 +12,11 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">编辑分类</h3>
+                        <h3 class="card-title">新增分类</h3>
                     </div>
                     <!-- /.card-header -->
-                    <form role="form" method="post" action="{{path_for('adminCategoryUpdate')}}">
-                        {{ include('admin/category/_form.html') }}
-                        <input type="hidden" name="id" value="{{category.id}}">
+                    <form role="form" method="post" action="{{path_for('adminUserSave')}}">
+                        {{ include('admin/user/_form.html') }}
                     </form>
                 </div>
             </div>

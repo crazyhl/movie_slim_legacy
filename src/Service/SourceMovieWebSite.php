@@ -235,7 +235,7 @@ class SourceMovieWebSite
         }
 
         // 获取总页数
-        $bodyElement = new \SimpleXMLElement($res->getBody()->getContents());
+        $bodyElement = new \SimpleXMLElement(preg_replace('#&(?=[a-z_0-9]+=)#', '&amp;',$res->getBody()->getContents()));
         $list = $bodyElement->list;
         $pageCount = $list['pagecount']->__toString();
 
