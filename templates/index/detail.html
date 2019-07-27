@@ -14,7 +14,7 @@
     <a href="{{ path_for('index')}}">首页</a>
     <div class="row">
         <div class="col-sm-3">
-            <div><img src="{{movie.pic}}" alt="""></div>
+            <div><img src="{{movie.pic}}" style="height: 80px;"></div>
         </div>
         <div class="col-sm-9">
             <div>
@@ -24,19 +24,17 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        {% for sourceMovie in movie.sourceMovies %}
-        <div class="card">
-            <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
-            <div class="card-body">
-                {% for movieList in sourceMovie.format_movie_list %}
-                <button type="button" class="btn btn-primary btn-sm playBtn" data-url="{{movieList.url}}">{{movieList.name}}</button>
-                {% endfor %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
     <div id="video" style="width:600px;height:400px;"></div>
+    {% for sourceMovie in movie.sourceMovies %}
+    <div class="card">
+        <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
+        <div class="card-body">
+            {% for movieList in sourceMovie.format_movie_list %}
+            <button type="button" class="btn btn-primary btn-sm playBtn mb-2" data-url="{{movieList.url}}">{{movieList.name}}</button>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 
