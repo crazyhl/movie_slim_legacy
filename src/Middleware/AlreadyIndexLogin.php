@@ -22,7 +22,7 @@ class AlreadyIndexLogin extends Base
      */
     public function __invoke($request, $response, $next)
     {
-        $referer = $request->getQueryParam('ref', $request->getHeader('HTTP_REFERER') ?: '/');
+        $referer = $request->getQueryParam('ref', $request->getHeader('HTTP_REFERER') ?: 'index');
 
         if ($this->isLogin($request)) {
             return $response->withRedirect($this->container->get('router')->pathFor($referer));

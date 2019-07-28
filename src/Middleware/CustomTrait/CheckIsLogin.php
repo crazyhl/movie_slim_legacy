@@ -29,7 +29,14 @@ trait CheckIsLogin
                 $loginUserQuery->where('is_admin', 1);
             }
             $loginUser = $loginUserQuery->first();
-            if ($loginUser && $_SESSION['uid'] == $uid && $loginUser->is_admin == 1) {
+
+            $isLoginCondition = ($loginUser && $_SESSION['uid'] == $uid);
+
+            if ($isAdmin) {
+                $isLoginCondition = ($isLoginCondition && $loginUser->is_admin == 1);
+            }
+
+            if ($isLoginCondition) {
                 // 已登录
                 if (empty($_SESSION['uid'])) {
                     // 如果是 remember 则要初始化 session

@@ -94,7 +94,7 @@ class Auth extends Base
             $error = '用户不存在';
         }
 
-        return $this->view->render($response, 'login.html', [
+        return $this->view->render($response, 'index/login.html', [
             'formTitle' => '登录',
             'error' => $error,
             'isRemember' => $isRemember,
