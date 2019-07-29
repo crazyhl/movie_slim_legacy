@@ -22,7 +22,7 @@ class Index extends Base
         $keywords = $request->getParsedBodyParam('word');
         $movies = [];
         if ($keywords) {
-            $movies = Movie::where('name', 'like', '%' . $keywords . '%')->get();
+            $movies = Movie::where('name', 'like', '%' . $keywords . '%')->where('is_show', 1)->get();
         }
         // Render index view
         return $this->view->render($response, 'index/index.html', compact('movies'));
@@ -35,7 +35,7 @@ class Index extends Base
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
         }
 
-        $movie = Movie::with(['sourceMovies', 'category'])->find($id);
+        $movie = Movie::with(['sourceMovies', 'category'])->where('id', $id)->where('is_show', 1)->first();
 
         if (empty($movie)) {
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
