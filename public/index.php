@@ -17,10 +17,10 @@ define('APP_DIR', __DIR__ . '/..');
 
 require __DIR__ . '/../vendor/autoload.php';
 
-header('Cache-Control: no cache');
 
 // 设置 session_name
 session_name('CSESSID');
+header('Cache-Control: no cache');
 
 session_start();
 
