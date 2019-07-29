@@ -20,9 +20,9 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // 设置 session_name
 session_name('CSESSID');
-header('Cache-Control: no cache');
 
 session_start();
+header('Cache-Control: no cache');
 
 // load env
 $dotenv = \Dotenv\Dotenv::create(__DIR__ . '/../');
