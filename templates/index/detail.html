@@ -36,19 +36,23 @@
     </div>
     {% endfor %}
 </div>
-
+<div id="dplayer" style="width:600px;height:400px;" class="mt-3 mb-3"></div>
 
 {% endblock %}
 {% block js %}
-<!--<script src="/js/hls.min.js"></script>-->
-<!--<script src="/dplayer/DPlayer.min.js"></script>-->
+<script src="/js/hls.min.js"></script>
+<script src="/dplayer/DPlayer.min.js"></script>
 <script src="/ckplayer/ckplayer.js"></script>
 
 <script>
     $(function(){
-        // const dp = new DPlayer({
-        //     container: document.getElementById('dplayer')
-        // });
+        const dp = new DPlayer({
+            container: document.getElementById('dplayer'),
+            video: {
+                url: '/test',
+                type: 'hls'
+            }
+        });
         $('.playBtn').click(function() {
             let url = $(this).data('url');
             $("#video").css('display', 'block');
