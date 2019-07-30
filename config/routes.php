@@ -31,8 +31,6 @@ return function (App $app) {
 
     $app->get('/login', IndexAuth::class . ':login')->setName('indexLogin')->add(new AlreadyIndexLogin($container));
     $app->post('/login', IndexAuth::class . ':loginAction')->setName('indexLoginAction');
-    $app->get('/test', Index::class . ':test');
-    $app->get('/test2', Index::class . ':test2');
 
     $app->group('/', function (App $app) {
         $app->get('', Index::class . ':index')->setName('index');
