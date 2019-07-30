@@ -1,7 +1,6 @@
 {% extends "/layout/index/base.html" %}
 
 {% block css %}
-<link rel="stylesheet" href="http://movie_slim_legacy.test/dplayer/DPlayer.min.css">
 <style>
     #iframe{
         width: 840px;
@@ -44,8 +43,6 @@
 
 {% endblock %}
 {% block js %}
-<script src="http://movie_slim_legacy.test/js/hls.min.js"></script>
-<script src="http://movie_slim_legacy.test/dplayer/DPlayer.min.js"></script>
 <script>
     $(function(){
         $('.playBtn').click(function() {
@@ -53,7 +50,7 @@
 
             let script = '<html>' +
                 '<head></head>' +
-                '<link rel="stylesheet" href="http://movie_slim_legacy.test/dplayer/DPlayer.min.css">' +
+                '<link rel="stylesheet" href="http://vd.h57.pw/dplayer/DPlayer.min.css">' +
                 '<style>' +
                 'body' +
                 '{' +
@@ -62,8 +59,8 @@
                 '</style>'+
                 '<body>' +
                 '<div id="dplayer" style="width: 100%;height: 100%;"></div>' +
-                '<script src="http://movie_slim_legacy.test/js/hls.min.js"><' +
-                '/script><script src="http://movie_slim_legacy.test/dplayer/DPlayer.min.js"><' +
+                '<script src="http://vd.h57.pw/js/hls.min.js"><' +
+                '/script><script src="http://vd.h57.pw/dplayer/DPlayer.min.js"><' +
                 '/script><script>' +
                 'const dp = new DPlayer({' +
                 'container: document.getElementById("dplayer"),' +
