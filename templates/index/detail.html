@@ -1,7 +1,7 @@
 {% extends "/layout/index/base.html" %}
 
 {% block css %}
-
+<link rel="stylesheet" href="http://movie_slim_legacy.test/dplayer/DPlayer.min.css">
 <style>
     #iframe{
         width: 840px;
@@ -44,6 +44,8 @@
 
 {% endblock %}
 {% block js %}
+<script src="http://movie_slim_legacy.test/js/hls.min.js"></script>
+<script src="http://movie_slim_legacy.test/dplayer/DPlayer.min.js"></script>
 <script>
     $(function(){
         $('.playBtn').click(function() {
