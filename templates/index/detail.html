@@ -48,6 +48,8 @@
 <script>
     $(function () {
         let frameWidth = $('#iframe').width()
+        console.log(frameWidth);
+        console.log(Math.ceil(frameWidth / 4 * 3))
         $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
 
         $('.playBtn').click(function () {
