@@ -51,11 +51,17 @@
         $('.playBtn').click(function () {
             let url = $(this).data('url');
             let screenWidth = $(window).width();
+            let screenHeight = Math.ceil(screenWidth / 4 * 3);
             if (screenWidth > 800) {
                 screenWidth = 800;
+                screenHeight = Math.ceil(screenWidth / 4 * 3);
+                screenWidth += 'px';
+                screenHeight += 'px';
+            } else {
+                screenWidth = '100%';
+                screenHeight = 'calc(width * 0.75)'
             }
 
-            let screenHeight = Math.ceil(screenWidth / 4 * 3);
 
             let script = '<html>' +
                 '<head></head>' +
@@ -63,7 +69,7 @@
                 '<style>' +
                 'body' +
                 '{' +
-                'width:' + screenWidth + 'px;height:' + screenHeight + 'px;' +
+                'width:' + screenWidth + ';height:' + screenHeight + ';' +
                 '}' +
                 '</style>' +
                 '<body>' +
