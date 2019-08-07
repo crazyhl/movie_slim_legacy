@@ -6,7 +6,6 @@
         width: 100%;
         border: 0;
         overflow: hidden;
-        display: none;
     }
 </style>
 {% endblock %}
@@ -51,6 +50,8 @@
         console.log(frameWidth);
         console.log(Math.ceil(frameWidth / 4 * 3))
         $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
+        $("#iframe").css('display', 'none');
+
 
         $('.playBtn').click(function () {
             let url = $(this).data('url');
@@ -88,9 +89,7 @@
                 '</body>' +
                 '</html>';
             $('#iframe').attr('srcdoc', script);
-            $("#video").css('display', 'block');
             $("#iframe").css('display', 'block');
-
         });
     });
 </script>
