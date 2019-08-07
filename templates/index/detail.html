@@ -47,7 +47,7 @@
 {% block js %}
 <script>
     $(function () {
-        let frameWidth = $('#iframe').width()
+        let frameWidth = $('#iframe').innerWidth()
         console.log(frameWidth);
         console.log(Math.ceil(frameWidth / 4 * 3))
         $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
