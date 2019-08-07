@@ -48,7 +48,7 @@
 <script>
     $(function () {
         let frameWidth = $('#iframe').width()
-        frameWidth.height(Math.ceil(frameWidth / 4 * 3))
+        $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
 
         $('.playBtn').click(function () {
             let url = $(this).data('url');
