@@ -40,6 +40,11 @@ class SourceMovie extends Base
                     foreach ($replaceArr as $from => $to) {
                         $url = str_replace($from, $to, $movieInfo[1]);
                     }
+
+                    if (substr($url, 0, 5) === 'http:') {
+                        $url = substr($url, 5);
+                    }
+
                     $formatMovieList[] = [
                         'name' => $movieInfo[0],
                         'url' => $url,
