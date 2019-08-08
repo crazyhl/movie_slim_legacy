@@ -19,9 +19,9 @@ class Movie extends Base
 
     public function getPicAttribute($pic)
     {
-        if (substr($pic, 0, 5) === 'http:') {
-            $pic = substr($pic, 5);
-        }
+//        if (substr($pic, 0, 5) === 'http:') {
+//            $pic = substr($pic, 5);
+//        }
 
         return $pic;
     }
