@@ -33,14 +33,19 @@ class SourceMovie extends Base
         $movieList = explode('#', $this->movie_list);
         $formatMovieList = [];
         foreach ($movieList as $movie) {
-            $movieInfo = explode('$', $movie);
-            foreach ($replaceArr as $from => $to) {
-                $url = str_replace($from, $to, $movieInfo[1]);
+            $movie = trim($movie);
+            if ($movie) {
+                $movieInfo = explode('$', $movie);
+                if (count($movieInfo > 2)) {
+                    foreach ($replaceArr as $from => $to) {
+                        $url = str_replace($from, $to, $movieInfo[1]);
+                    }
+                    $formatMovieList[] = [
+                        'name' => $movieInfo[0],
+                        'url' => $url,
+                    ];
+                }
             }
-            $formatMovieList[] = [
-                'name' => $movieInfo[0],
-                'url' => $url,
-            ];
         }
         return $formatMovieList;
     }
