@@ -20,7 +20,7 @@ class SourceMovie extends Base
     public function getFormatMovieListAttribute($value)
     {
         $replaceArr = [
-            'v-mtime.com' => 'youku.com-www-163.com',
+            'v-mtime.com' => 'ifeng.com-v-ifeng.com',
             'vip.okzybo.com' => 'youku.cdn-56.com',
             'youku.com-www-163.com' => 'ifeng.com-v-ifeng.com',
             'cdn.okokyun.com' => 'sohu.com-v-sohu.com',
@@ -28,6 +28,12 @@ class SourceMovie extends Base
             'yun.kakazy-yun.com' => 'zy.kubo-360-tudou.com',
             'zy.kakazy-yun.com' => 'zy.baidu-360-yyy-kubo.com',
             'kbzy.zxziyuan-yun.com' => 'youku.com-kubozy.com',
+            '163.com-l-163.com' => 'bilibili.com-l-163.com',
+            'youku.com-i-youku.com' => 'bilibili.com-l-163.com',
+            '789.com-l-163.com' => 'bilibili.com-l-163.com',
+            'ifeng.com-l-ifeng.com' => 'youku.com-youku.net',
+            'iqiyi.com-l-iqiyi.com' => 'youku.com-iqiyi.net',
+            'youku.com-okzy.com' => 'youku.com-qq.net',
         ];
 
         $movieList = explode('#', $this->movie_list);
@@ -58,7 +64,7 @@ class SourceMovie extends Base
     public function getPicAttribute($pic)
     {
         $replaceArr = [
-            'pic.china-gif.com' => 'img.pic-imges.com'
+            'pic.china-gif.com' => 'rpg.pic-imges.com'
         ];
 
         foreach ($replaceArr as $from => $to) {

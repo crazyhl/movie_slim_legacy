@@ -50,6 +50,7 @@ class ShortCrawlerProcess extends BaseCommand
             ->where('type', 2)
             ->where('status', 0)
             ->where('execute_time', '<=', Carbon::now()->timestamp)
+            ->orderBy('id', 'asc')
             ->first();
         // 清理过期任务
         CronJob::where('name', 'shortTask')
