@@ -258,11 +258,11 @@ class SourceMovieWebSite
         foreach ($list->children() as $video) {
             // 构造data
             $tid = $video->tid->__toString();
-            $name = $video->name->__toString();
+            $name = trim($video->name->__toString());
             $dd = '';
             foreach ($video->dl->children() as $dd) {
                 if (substr($dd['flag'], -4) == 'm3u8') {
-                    $dd = $dd->__toString();
+                    $dd .= trim($dd->__toString());
                 }
             }
 
@@ -280,20 +280,20 @@ class SourceMovieWebSite
                 $data = [
                     'source_website_id' => $websiteId,
                     'source_website_category_id' => $tid,
-                    'source_website_movie_id' => $video->id->__toString(),
+                    'source_website_movie_id' => trim($video->id->__toString()),
                     'name' => $name,
                     'name_md5' => md5($name),
                     'category_id' => $localCategoryId,
-                    'pic' => $video->pic->__toString(),
-                    'lang' => $video->lang->__toString(),
-                    'area' => $video->area->__toString(),
-                    'year' => $video->year->__toString(),
-                    'note' => $video->note->__toString(),
-                    'actor' => $video->actor->__toString(),
-                    'director' => $video->director->__toString(),
-                    'description' => $video->des->__toString(),
+                    'pic' => trim($video->pic->__toString()),
+                    'lang' => trim($video->lang->__toString()),
+                    'area' => trim($video->area->__toString()),
+                    'year' => trim($video->year->__toString()),
+                    'note' => trim($video->note->__toString()),
+                    'actor' => trim($video->actor->__toString()),
+                    'director' => trim($video->director->__toString()),
+                    'description' => trim($video->des->__toString()),
                     'movie_list' => $dd,
-                    'last' => $video->last->__toString(),
+                    'last' => trim($video->last->__toString()),
                     'is_show' => $isShow,
                 ];
 
