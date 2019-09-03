@@ -37,7 +37,7 @@ return function (App $app) {
         $app->post('', Index::class . ':search')->setName('indexPost');
 
         $app->get('detail', Index::class . ':detail')->setName('indexDetail');
-    })->add(new NeedIndexLogin($container));
+    }); //->add(new NeedIndexLogin($container));
     $app->group('/admin', function (App $app) {
         $app->get('', AdminIndex::class . ':index')->setName('admin');
         $app->get('/index', AdminIndex::class . ':index')->setName('adminIndex');
