@@ -118,7 +118,7 @@ class Category extends Base
 
             $category->save();
             // 同步 到movie
-            \App\Model\Movie::where('category_id', $categoryId)->update('is_show', $category->is_show);
+            \App\Model\Movie::where('category_id', $categoryId)->update(['is_show' => $category->is_show]);
         }
 
         return $response->withRedirect($this->container->router->pathFor('adminCategory'), 200);
