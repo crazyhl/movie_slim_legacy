@@ -116,9 +116,19 @@ class SourceMovieWebSite
         if ($movie) {
             $localMovieId = $movie->id;
             // 更新最新数据
-            $movie->is_show = $data['is_show'];
-            $movie->updated_at = Carbon::createFromTimeString($data['last']);
-            $movie->save();
+            $isSave = false;
+            if ($movie->is_show != $data['is_show']) {
+                $movie->is_show = $data['is_show'];
+                $isSave = true;
+            }
+            if (Carbon::createFromTimeString($data['last'])->gt($movie->updated_at)) {
+                $movie->updated_at = Carbon::createFromTimeString($data['last']);
+                $isSave = true;
+            }
+
+            if ($isSave) {
+                $movie->save();
+            }
         } else {
             // 重试机制
 //            for ($i = 0; $i < 5; $i++) {
