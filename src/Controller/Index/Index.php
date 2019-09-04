@@ -5,6 +5,7 @@ namespace App\Controller\Index;
 
 
 use App\Controller\Base;
+use App\Middleware\CustomTrait\CheckIsLogin;
 use App\Model\Movie;
 use GuzzleHttp\Client;
 use Slim\Http\Request;
@@ -12,6 +13,8 @@ use Slim\Http\Response;
 
 class Index extends Base
 {
+    use CheckIsLogin;
+
     public function index(Request $request, Response $response, $args)
     {
         // Render index view
@@ -23,7 +26,11 @@ class Index extends Base
         $keywords = $request->getParsedBodyParam('word');
         $movies = [];
         if ($keywords) {
-            $movies = Movie::where('name', 'like', '%' . $keywords . '%')->where('is_show', 1)->get();
+            $movieQuery = Movie::where('name', 'like', '%' . $keywords . '%');
+            if (!$this->isLogin($request)) {
+                $movieQuery->where('is_show', 1);
+            }
+            $movies = $movieQuery->get();
         }
         // Render index view
         return $this->view->render($response, 'index/index.html', compact('movies'));
@@ -35,8 +42,11 @@ class Index extends Base
         if (empty($id)) {
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
         }
-
-        $movie = Movie::with(['sourceMovies', 'category'])->where('id', $id)->where('is_show', 1)->first();
+        $movieQuery = Movie::with(['sourceMovies', 'category'])->where('id', $id);
+        if (!$this->isLogin($request)) {
+            $movieQuery->where('is_show', 1);
+        }
+        $movie = $movieQuery->first();
 
         if (empty($movie)) {
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
