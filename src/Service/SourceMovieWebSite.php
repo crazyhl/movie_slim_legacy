@@ -274,9 +274,9 @@ class SourceMovieWebSite
             $tid = $video->tid->__toString();
             $name = trim($video->name->__toString());
             $dd = '';
-            foreach ($video->dl->children() as $dd) {
-                if (substr($dd['flag'], -4) == 'm3u8') {
-                    $dd .= trim($dd->__toString());
+            foreach ($video->dl->children() as $ddElement) {
+                if (substr($ddElement['flag'], -4) == 'm3u8') {
+                    $dd .= trim($ddElement->__toString());
                 }
             }
 
