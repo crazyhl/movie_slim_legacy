@@ -44,7 +44,7 @@ class SourceMovie extends Base
                 $movieInfo = explode('$', $movie);
                 if (count($movieInfo > 2)) {
                     foreach ($replaceArr as $from => $to) {
-                        $url = str_replace($from, $to, $movieInfo[1]);
+                        $url = str_replace($from, $to, $movieInfo[count($movieInfo) - 1]);
                     }
 
                     if (substr($url, 0, 5) === 'http:') {
