@@ -115,6 +115,10 @@ class SourceMovieWebSite
         $movie = Movie::where('name_md5', $data['name_md5'])->first();
         if ($movie) {
             $localMovieId = $movie->id;
+            // 更新最新数据
+            $movie->is_show = $data['is_show'];
+            $movie->updated_at = Carbon::createFromTimeString($data['last']);
+            $movie->save();
         } else {
             // 重试机制
 //            for ($i = 0; $i < 5; $i++) {
