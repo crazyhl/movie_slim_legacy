@@ -80,7 +80,6 @@ class Category extends Base
         $category->parent_id = $request->getParsedBodyParam('parent_id');
         $category->is_show = $request->getParsedBodyParam('is_show');
         $category->order = $request->getParsedBodyParam('order');
-        $category->flag = $request->getParsedBodyParam('flag');
 
         $category->save();
 
@@ -113,7 +112,6 @@ class Category extends Base
             $category->parent_id = $request->getParsedBodyParam('parent_id');
             $category->is_show = $request->getParsedBodyParam('is_show');
             $category->order = $request->getParsedBodyParam('order');
-            $category->flag = $request->getParsedBodyParam('flag');
 
             $category->save();
             // 同步 到movie

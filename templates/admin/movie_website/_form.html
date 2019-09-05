@@ -13,7 +13,11 @@
         <input type="text" class="form-control" name="api_url" placeholder="apiUrl"
                value="{{defaultExtra(website['api_url'], defaultExtra(old('api_url')))}}">
     </div>
-
+    <div class="form-group">
+        <label>flag</label>
+        <input type="text" class="form-control" name="flag" placeholder="获取片源的falg标识"
+               value="{{defaultExtra(category['flag'], defaultExtra(old('slug'), 'm3u8'))}}">
+    </div>
     <!-- radio -->
     <div class="form-group">
         <label>状态</label>

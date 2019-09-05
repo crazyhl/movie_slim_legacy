@@ -43,6 +43,7 @@ class MovieWebsite extends Base
         $website = new SourceMovieWebsite();
         $website->name = $request->getParsedBodyParam('name');
         $website->api_url = $request->getParsedBodyParam('api_url');
+        $website->flag = $request->getParsedBodyParam('flag');
         $website->status = $request->getParsedBodyParam('status');
 
         $website->save();
@@ -70,6 +71,7 @@ class MovieWebsite extends Base
 
             $website->name = $request->getParsedBodyParam('name');
             $website->api_url = $request->getParsedBodyParam('api_url');
+            $website->flag = $request->getParsedBodyParam('flag');
             $website->status = $request->getParsedBodyParam('status');
 
             $website->save();
