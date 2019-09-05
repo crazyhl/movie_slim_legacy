@@ -63,9 +63,7 @@ class Category extends Base
 
     public function add(Request $request, Response $response)
     {
-        $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
-        $categories = CategoryService::groupCategory($categories);
-        $categories = CategoryService::groupToTree($categories);
+        $categories = CategoryModel::where('parent_id', 0)->orderBy('order', 'ASC')->get()->toArray();
 
         $parentId = $request->getQueryParam('parentId', -1);
 
@@ -82,6 +80,7 @@ class Category extends Base
         $category->parent_id = $request->getParsedBodyParam('parent_id');
         $category->is_show = $request->getParsedBodyParam('is_show');
         $category->order = $request->getParsedBodyParam('order');
+        $category->flag = $request->getParsedBodyParam('flag');
 
         $category->save();
 
@@ -97,9 +96,8 @@ class Category extends Base
         }
         $category = CategoryModel::find($categoryId);
 
-        $categories = CategoryModel::orderBy('parent_id', 'ASC')->orderBy('order', 'ASC')->get()->toArray();
-        $categories = CategoryService::groupCategory($categories);
-        $categories = CategoryService::groupToTree($categories);
+        $categories = CategoryModel::where('parent_id', 0)->orderBy('order', 'ASC')->get()->toArray();
+
         return $this->display($response, 'admin/category/edit.html'
             , compact('category', 'categories'));
     }
@@ -115,6 +113,7 @@ class Category extends Base
             $category->parent_id = $request->getParsedBodyParam('parent_id');
             $category->is_show = $request->getParsedBodyParam('is_show');
             $category->order = $request->getParsedBodyParam('order');
+            $category->flag = $request->getParsedBodyParam('flag');
 
             $category->save();
             // 同步 到movie

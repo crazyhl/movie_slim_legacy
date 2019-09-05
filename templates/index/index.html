@@ -6,10 +6,17 @@
 {% endblock %}
 
 {% block content %}
+{{ include('index/_navbar.html') }}
 <form action="{{ path_for('indexPost')}}" method="post" >
     <input type="text" name="word">
     <button>搜索</button>
 </form>
+
+{% if isLogin() %}
+登陆了
+{% else %}
+没登录
+{% endif %}
 
 <ul>
     {% for movie in movies %}

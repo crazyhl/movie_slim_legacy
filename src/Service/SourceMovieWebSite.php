@@ -60,6 +60,7 @@ class SourceMovieWebSite
                 'local_category_id' => $sourceBindRelation['local_category_id'],
                 'is_show' => $sourceBindRelation['is_show'],
                 'category_is_show' => $sourceBindRelation['localCategory']['is_show'],
+                'local_category_parent_id' => $sourceBindRelation['localCategory']['parent_id'] > 0 ? $sourceBindRelation['localCategory']['parent']['id'] : $sourceBindRelation['localCategory']['id'],
             ];
         }
 
@@ -82,7 +83,7 @@ class SourceMovieWebSite
             $buildParams = http_build_query($params);
             $fullUrl = $webSite->api_url . '?' . $buildParams;
             sleep(rand(1,3));
-            self::getMovieList($fullUrl, $websiteId, $movieSiteCategoryRelationArr);
+            self::getMovieList($fullUrl, $websiteId, $movieSiteCategoryRelationArr, $webSite->flag);
         }
 
 
@@ -109,7 +110,10 @@ class SourceMovieWebSite
 //        var_dump( $fullFileDir. $picFileName);
         $downloadPicResult = false;
 
+        // 分析一下分类是否一致
+        $trimName = preg_replace('~\s+~', '', $data['name']);
 
+        $data['name_md5'] = md5($trimName . $data['category_parent_id']);
         // 然后就可以保存数据了
         // 先查询影片是否存在
         $movie = Movie::where('name_md5', $data['name_md5'])->first();
@@ -201,6 +205,7 @@ class SourceMovieWebSite
                 $sourceMovie->director = $data['director'];
                 $sourceMovie->description = $data['description'];
                 $sourceMovie->movie_list = $data['movie_list'];
+                $sourceMovie->is_show = $data['is_show'];
                 $sourceMovie->created_at = Carbon::createFromTimeString($data['last']);
                 $sourceMovie->updated_at = Carbon::createFromTimeString($data['last']);
                 $sourceMovie->save();
@@ -256,7 +261,7 @@ class SourceMovieWebSite
         return $pageCount;
     }
 
-    private static function getMovieList($apiUrl, $websiteId, $movieSiteCategoryRelationArr)
+    private static function getMovieList($apiUrl, $websiteId, $movieSiteCategoryRelationArr, $flag = 'm3u8')
     {
         $client = new Client();
         $res = $client->request('GET', $apiUrl, ['verify' => false, 'max' => 10, 'timeout' => 30, 'read_timeout' => 30, 'connect_timeout' => 30]);
@@ -275,7 +280,7 @@ class SourceMovieWebSite
             $name = trim($video->name->__toString());
             $dd = '';
             foreach ($video->dl->children() as $ddElement) {
-                if (substr($ddElement['flag'], -4) == 'm3u8') {
+                if (substr($ddElement['flag'], mb_strlen($flag) * -1) == $flag) {
                     $dd .= trim($ddElement->__toString());
                 }
             }
@@ -296,8 +301,8 @@ class SourceMovieWebSite
                     'source_website_category_id' => $tid,
                     'source_website_movie_id' => trim($video->id->__toString()),
                     'name' => $name,
-                    'name_md5' => md5($name),
                     'category_id' => $localCategoryId,
+                    'category_parent_id' => $movieSiteCategoryRelationArr[$tid]['local_category_parent_id'],
                     'pic' => trim($video->pic->__toString()),
                     'lang' => trim($video->lang->__toString()),
                     'area' => trim($video->area->__toString()),

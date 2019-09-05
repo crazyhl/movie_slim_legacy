@@ -77,6 +77,7 @@ class InitDataBase extends BaseCommand
             $table->increments('id');
             $table->string('name')->comment('来源网站名称');
             $table->string('api_url')->unique()->comment('来源网站 api url');
+            $table->string('flag')->default('m3u8')->comment('采用dd的标识');
             $table->tinyInteger('status')->default(0)
                 ->comment('状态，不准备删除资源网站，可以禁用，不使用');
             $table->timestamps();
@@ -162,6 +163,7 @@ class InitDataBase extends BaseCommand
             $table->string('actor')->comment('演员');
             $table->string('director')->comment('导演');
             $table->text('description')->comment('简介');
+            $table->integer('is_show')->comment('是否外显');
             $table->mediumText('movie_list')->comment('影片列表');
             $table->timestamps();
 

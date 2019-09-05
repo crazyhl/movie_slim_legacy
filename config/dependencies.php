@@ -2,6 +2,7 @@
 
 use App\Twig\Extension\Breadcrumb;
 use App\Twig\Extension\DefaultExtra;
+use App\Twig\Extension\isLogin;
 use App\Twig\Extension\Old;
 use App\Twig\Extension\Paginate;
 use Illuminate\Database\Capsule\Manager;
@@ -33,6 +34,7 @@ return function (App $app) {
         $view->addExtension(new Old());
         $view->addExtension(new DefaultExtra());
         $view->addExtension(new Breadcrumb());
+        $view->addExtension(new isLogin());
 
         return $view;
     };
