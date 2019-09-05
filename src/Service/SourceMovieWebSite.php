@@ -113,7 +113,7 @@ class SourceMovieWebSite
         // 分析一下分类是否一致
         $trimName = preg_replace('~\s+~', '', $data['name']);
 
-        $data['name_md5'] = md5($trimName . $data['category_parent_id']);
+        $data['name_md5'] = md5(strtolower($trimName) . $data['category_parent_id']);
         // 然后就可以保存数据了
         // 先查询影片是否存在
         $movie = Movie::where('name_md5', $data['name_md5'])->first();

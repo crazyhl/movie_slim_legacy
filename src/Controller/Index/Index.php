@@ -4,14 +4,12 @@
 namespace App\Controller\Index;
 
 
-use App\Controller\Base;
 use App\Middleware\CustomTrait\CheckIsLogin;
 use App\Model\Movie;
-use GuzzleHttp\Client;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class Index extends Base
+class Index extends IndexBase
 {
     use CheckIsLogin;
 
