@@ -9,17 +9,36 @@
 <div class="container pr-0 pl-0">
     {{ include('index/_navbar.html') }}
 
-    {% if isLogin() %}
-    登陆了
-    {% else %}
-    没登录
-    {% endif %}
+
 
     <ul>
         {% for movie in movies %}
         <li><a href="{{ path_for('indexDetail', {}, {'id': movie.id})}}">{{movie.name}}</a></li>
         {% endfor %}
     </ul>
+    {% for newestMovieList in newestMovieListByCategory %}
+    <div class="row">
+        <div class="col-md-2 col-12">
+            {{newestMovieList['category']['name']}}
+        </div>
+        <div class="col-md-10 col-12">
+            <div class="row">
+                {% for movie in newestMovieList['movieList'] %}
+                <div class="col-2">
+                    <div class="card" >
+                        <img class="card-img-top" src="{{movie['pic']}}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">{{movie['name']}}</h5>
+                            <p class="card-text">{{movie['name']}}</p>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 

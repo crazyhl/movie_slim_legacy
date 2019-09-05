@@ -4,7 +4,7 @@
 namespace App\Controller\Index;
 
 
-use App\Middleware\CustomTrait\CheckIsLogin;
+use App\Model\Category;
 use App\Model\Movie;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -20,7 +20,7 @@ class Index extends IndexBase
         if ($categoryId > 0) {
 
         } else {
-            $this->getIndexData();
+            $this->getIndexData($request);
         }
 
         return $this->view->render($response, 'index/index.html', $args);
@@ -63,8 +63,39 @@ class Index extends IndexBase
     }
 
     // 获取首页数据
-    private function getIndexData()
+    private function getIndexData(Request $request)
     {
+        // 构造一批初始化数据
+        $isLogin = $this->isLogin($request);
+        if ($isLogin) {
+            $categories = Category::with('childList')->where('parent_id', 0)->get();
+        } else {
+            $categories = Category::with('childList')->where('parent_id', 0)->where('is_show', 0)->get();
+        }
 
+        $newestMovieListByCategory = [];
+        //遍历最新
+        foreach ($categories as $category) {
+            $categoryIdArr = [];
+            $categoryIdArr[] = $category->id;
+            foreach ($category->childList as $childCategory) {
+                $categoryIdArr[] = $childCategory->id;
+            }
+
+            $newestMovieListQuery = Movie::with(['category'])->whereIn('category_id', $categoryIdArr)
+                ->limit(12);
+            if (!$isLogin) {
+                $newestMovieListQuery->where('is_show', 1);
+            }
+
+            $newestMovieListByCategory[] = [
+                'category' => $category,
+                'movieList' => $newestMovieListQuery->get(),
+            ];
+
+            $queryLog = $this->container->db->connection()->getQueryLog();
+        }
+
+        $this->view['newestMovieListByCategory'] = $newestMovieListByCategory;
     }
 }
