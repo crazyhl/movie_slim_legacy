@@ -11,16 +11,24 @@ use Slim\Http\Response;
 
 class Index extends IndexBase
 {
-    use CheckIsLogin;
-
     public function index(Request $request, Response $response, $args)
     {
         // Render index view
+        $this->view['activeNav'] = 'home';
+        $categoryId = $request->getQueryParam('cid', 0);
+
+        if ($categoryId > 0) {
+
+        } else {
+            $this->getIndexData();
+        }
+
         return $this->view->render($response, 'index/index.html', $args);
     }
 
     public function search(Request $request, Response $response, $args)
     {
+        $this->view['activeNav'] = 'home';
         $keywords = $request->getParsedBodyParam('word');
         $movies = [];
         if ($keywords) {
@@ -36,6 +44,7 @@ class Index extends IndexBase
 
     public function detail(Request $request, Response $response, $args)
     {
+        $this->view['activeNav'] = 'home';
         $id = $request->getQueryParam('id');
         if (empty($id)) {
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
@@ -51,5 +60,11 @@ class Index extends IndexBase
         }
         // Render index view
         return $this->view->render($response, 'index/detail.html', compact('movie'));
+    }
+
+    // 获取首页数据
+    private function getIndexData()
+    {
+
     }
 }
