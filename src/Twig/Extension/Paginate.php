@@ -140,7 +140,7 @@ class Paginate extends AbstractExtension
     {
         return [
             'name' => $name,
-            'url' => $path . (stripos('?', $path) ? '&' : '?') . $pageName . '=' . $index,
+            'url' => $path . (stripos($path, '?') ? '&' : '?') . $pageName . '=' . $index,
             'isDisabled' => $isDisable,
             'isActive' => $isActive === null ? (($index == $currentPage) ? true : false) : $isActive,
             'isLink' => $path === false ? false : true,

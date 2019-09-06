@@ -24,47 +24,11 @@
 <div class="container pr-0 pl-0">
     {{ include('index/_navbar.html') }}
 
-    <ul>
-        {% for movie in movies %}
-        <li><a href="{{ path_for('indexDetail', {}, {'id': movie.id})}}">{{movie.name}}</a></li>
-        {% endfor %}
-    </ul>
-    {% for newestMovieList in newestMovieListByCategory %}
-    <div class="row category-block ml-0 mr-0 mb-5">
-        <div class="col-md-2 col-12 d-flex flex-row flex-md-column justify-content-between justify-content-md-start">
-            <div class="mb-md-2">
-                <a class="text-dark" href="{{ path_for('index', {}, {'cid': newestMovieList['category'].id})}}">
-                    <h4>{{newestMovieList['category']['name']}}</h4>
-                </a>
-            </div>
-            <div class="">
-                {% for childCategory in newestMovieList['category']['childList'] %}
-                <a class="text-danger" href="{{ path_for('index', {}, {'cid': childCategory.id})}}">{{childCategory.name}}</a>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="col-md-10 col-12">
-            <div class="row">
-                {% for movie in newestMovieList['movieList'] %}
-                <div class="col-6 col-md-4 col-xl-2">
-                    <a class="text-dark text-decoration-none" href="{{ path_for('indexDetail', {}, {'id': movie.id})}}">
-                    <div class="card" >
-                        <div class="card-img-top movie-cover-container">
-                            <img class=" movie-cover img-thumbnail" src="{{movie['pic']}}" alt="Card image cap">
-                        </div>
-                        <div class="card-body p-1">
-                            <p class="card-text text-truncate small">{{movie['name']}}</p>
-                        </div>
-                    </div>
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-
-
+    {% if breadcrumb != false %}
+    {{breadcrumb(breadcrumb, '', '')}}
+    {% endif %}
+    {{ include('index/_indexWithFullCategory.html') }}
+    {{ include('index/_indexWithCategoryList.html') }}
 </div>
 
 <footer class="container pr-0 pl-0 pt-3 pb-3 text-center bg-light small">

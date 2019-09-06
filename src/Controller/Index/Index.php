@@ -18,7 +18,7 @@ class Index extends IndexBase
         $categoryId = $request->getQueryParam('cid', 0);
 
         if ($categoryId > 0) {
-
+            $this->getCategoryData($request);
         } else {
             $this->getIndexData($request);
         }
@@ -98,5 +98,52 @@ class Index extends IndexBase
         }
 
         $this->view['newestMovieListByCategory'] = $newestMovieListByCategory;
+    }
+
+    private function getCategoryData(Request $request)
+    {
+        $categoryId = $request->getQueryParam('cid', 0);
+        $activeNavId = $categoryId;
+
+        $category = Category::with(['parent', 'childList'])->where('id', $categoryId)->first();
+        // 构造面包屑导航
+        $breadcrumb = [];
+        $breadcrumb[] = [
+            'name' => $category->name,
+            'url' => $this->router->pathFor('index', [], ['cid' => $category->id]),
+            'current' => true,
+        ];
+        if ($category->parent) {
+            $activeNavId = $category->parent->id;
+            array_unshift($breadcrumb, [
+                'name' => $category->parent->name,
+                'url' => $this->router->pathFor('index', [], ['cid' => $category->parent->id]),
+                'current' => false,
+            ]);
+        }
+        array_unshift($breadcrumb, [
+            'name' => '首页',
+            'url' => $this->router->pathFor('index'),
+            'current' => false,
+        ]);
+        // 构造查询id
+        $categoryIdArr = [];
+        $categoryIdArr[] = $categoryId;
+        if ($category->childList) {
+            foreach ($category->childList as $childCategory) {
+                $categoryIdArr[] = $childCategory->id;
+            }
+        }
+        // 构造查询
+        $movieQuery = Movie::with('category')->whereIn('category_id', $categoryIdArr)->orderBy('updated_at', 'DESC');
+        if (!$this->isLogin($request)) {
+            $movieQuery->where('is_show', 1);
+        }
+
+        $movieList = $movieQuery->myPaginate(18);
+
+        $this->view['activeNav'] = $activeNavId;
+        $this->view['breadcrumb'] = $breadcrumb;
+        $this->view['categoryMovieList'] = $movieList;
     }
 }
