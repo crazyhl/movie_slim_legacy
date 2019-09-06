@@ -34,6 +34,17 @@ class SourceMovie extends Base
             'ifeng.com-l-ifeng.com' => 'youku.com-youku.net',
             'iqiyi.com-l-iqiyi.com' => 'youku.com-iqiyi.net',
             'youku.com-okzy.com' => 'youku.com-qq.net',
+            'fuli.yazyzw.com' => 'zouyu.laohu-zuida.com',
+            'fuli.zuida-youku-le.com' => 'zouyu.laohu-zuida.com',
+            'yingshi.yazyzw.com' => 'shenling.dijiang-zuida.com',
+            'sohu.zuida-163sina.com' => 'shenling.dijiang-zuida.com',
+            'youku163.zuida-bofang.com' => 'yushou.qitu-zuida.com',
+            'zaixian.jingpin88.com' => 'bofang.jingpin88.com',
+            'leshi.zuidameiju.com' => 'iqiyi.zuidameiju.com',
+            'zouyu.laohu-zuida.com' => 'leshi.cdn-zuyida.com',
+            'hao.zuida-youku.com' => 'kuku.zuida-youku.com',
+            'shenling.dijiang-zuida.com' => 'yiyi.55zuiday.com',
+            'iqiyi.qq-zuidazy.com' => 'feifei.feifeizuida.com',
         ];
 
         $movieList = explode('#', $this->movie_list);
