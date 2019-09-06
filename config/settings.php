@@ -17,7 +17,8 @@ return [
         // Renderer settings
         'view' => [
             'template_path' => __DIR__ . '/../templates/',
-            'cache' => false,
+            'cache' => __DIR__ . '/../caches/',
+            'auto_reload' => true,
         ],
 
         // Monolog settings
