@@ -7,6 +7,9 @@
         border: 0;
         overflow: hidden;
     }
+    #current-play {
+        display: none;
+    }
 </style>
 {% endblock %}
 
@@ -32,6 +35,9 @@
             </div>
         </div>
     </div>
+    <div class="alert alert-primary mt-2" id="current-play" role="alert">
+        A simple primary alert—check it out!
+    </div>
 </div>
     <iframe frameborder="0" id="iframe" class="mt-2 mb-2 container p-0" allowtransparency="true" allowfullscreen="true"></iframe>
 <div class="container">
@@ -40,7 +46,12 @@
         <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
         <div class="card-body">
             {% for movieList in sourceMovie.format_movie_list %}
-            <button type="button" class="btn btn-primary btn-sm playBtn mb-2" data-url="{{movieList.url}}">
+            <button type="button"
+                    class="btn btn-primary btn-sm playBtn mb-2"
+                    data-source-name="{{sourceMovie.sourceWebsite.name}}"
+                    data-movie-name="{{movie.name}}"
+                    data-video-name="{{movieList.name}}"
+                    data-url="{{movieList.url}}">
                 {{movieList.name}}
             </button>
             {% endfor %}
@@ -81,8 +92,12 @@
         // console.log(frameWidth);
         initIFrameSize();
 
+
+
         $('.playBtn').click(function () {
             let url = $(this).data('url');
+            $("#current-play").text('正在播放:' + $(this).data('sourceName')  + '-'  + $(this).data('movieName')  + '-'+ $(this).data('videoName'))
+            $("#current-play").css('display', 'block');
 
             let script = '<html>' +
                 '<head></head>' +
@@ -118,6 +133,9 @@
                 'dp.on("webfullscreen_cancel", function () {' +
                 'let fatherEle = window.parent.document.getElementById("iframe");' +
                 'parent.initIFrameSize();' +
+                '});' +
+                'dp.on("ended", function () {' +
+                'console.log("播放完成")' +
                 '});' +
                 '<' +
                 '/script>' +
