@@ -16,6 +16,9 @@
     {% if breadcrumb != false %}
     {{breadcrumb(breadcrumb, '', '')}}
     {% endif %}
+    <div class="alert alert-warning" role="alert">
+        播放不了的就换别的源，如果只有一个源，就看别的去
+    </div>
     <div class="row">
         <div class="col-sm-2">
             <div><img src="{{movie.pic}}" style="width: 100%"></div>
@@ -29,7 +32,9 @@
             </div>
         </div>
     </div>
-    <iframe frameborder="0" id="iframe" class="mt-2 mb-2"></iframe>
+</div>
+    <iframe frameborder="0" id="iframe" class="mt-2 mb-2 container p-0" allowtransparency="true" allowfullscreen="true"></iframe>
+<div class="container">
     {% for sourceMovie in movie.sourceMovies %}
     <div class="card mb-2 mt-2">
         <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
@@ -49,24 +54,35 @@
 {% endblock %}
 {% block js %}
 <script>
+    function changeIframeSize () {
+        $('#iframe').css('height', '100vh');
+        $('#iframe').css('width', '100vw');
+        $("#iframe").removeClass('container');
+
+        $(window).scrollTop($("#iframe").offset().top);
+        $("body").parent().css("overflow-y","hidden");
+        $("body").parent().css("overflow-x","hidden");
+    }
+
+    function initIFrameSize() {
+        $('#iframe').css('width', '100%');
+        $("#iframe").addClass('container');
+        let frameWidth = $('#iframe').innerWidth()
+        $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
+
+        $("body").parent().css("overflow-y","auto");
+        $("body").parent().css("overflow-x","auto");
+    }
+
     $(function () {
         let frameWidth = $('#iframe').innerWidth()
-        console.log(frameWidth);
-        console.log(Math.ceil(frameWidth / 4 * 3))
         $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
         $("#iframe").css('display', 'none');
+        console.log(frameWidth);
 
 
         $('.playBtn').click(function () {
             let url = $(this).data('url');
-            // let screenWidth = $(window).width();
-            // if (screenWidth > 820) {
-            //     screenWidth = 800;
-            // } else {
-            //     screenWidth = screenWidth - 20;
-            // }
-            //
-            // let screenHeight = Math.ceil(screenWidth / 4 * 3);
 
             let script = '<html>' +
                 '<head></head>' +
@@ -83,7 +99,7 @@
                 '}' +
                 '</style>' +
                 '<body>' +
-                '<div id="dplayer" style="width: 95vw;height: 95vh;"></div>' +
+                '<div id="dplayer" style="width: 100vw;height: 100vh;"></div>' +
                 '<script src="//vd.chrishao.com/js/hls.min.js"><' +
                 '/script><script src="//vd.chrishao.com/dplayer/DPlayer.min.js"><' +
                 '/script><script>' +
@@ -93,7 +109,16 @@
                 'url: "' + url + '",' +
                 'type: "hls"' +
                 '}' +
-                '});<' +
+                '});' +
+                'dp.on("webfullscreen", function () {' +
+                'let fatherEle = window.parent.document.getElementById("iframe");' +
+                'parent.changeIframeSize();' +
+                '});' +
+                'dp.on("webfullscreen_cancel", function () {' +
+                'let fatherEle = window.parent.document.getElementById("iframe");' +
+                'parent.initIFrameSize();' +
+                '});' +
+                '<' +
                 '/script>' +
                 '</body>' +
                 '</html>';
