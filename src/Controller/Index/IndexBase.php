@@ -20,7 +20,7 @@ class IndexBase extends Base
         if ($this->isLogin($container->request)) {
             $categories = Category::where('parent_id', 0)->get();
         } else {
-            $categories = Category::where('parent_id', 0)->where('is_show', 0)->get();
+            $categories = Category::where('parent_id', 0)->where('is_show', 1)->get();
         }
 
         $this->view['categories'] = $categories;
