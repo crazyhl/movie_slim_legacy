@@ -70,7 +70,7 @@ class Index extends IndexBase
         if ($isLogin) {
             $categories = Category::with('childList')->where('parent_id', 0)->get();
         } else {
-            $categories = Category::with('childList')->where('parent_id', 0)->where('is_show', 0)->get();
+            $categories = Category::with('childList')->where('parent_id', 0)->where('is_show', 1)->get();
         }
 
         $newestMovieListByCategory = [];
@@ -83,6 +83,7 @@ class Index extends IndexBase
             }
 
             $newestMovieListQuery = Movie::with(['category'])->whereIn('category_id', $categoryIdArr)
+                ->orderBy('updated_at', 'DESC')
                 ->limit(12);
             if (!$isLogin) {
                 $newestMovieListQuery->where('is_show', 1);
