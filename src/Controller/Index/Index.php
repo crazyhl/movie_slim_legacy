@@ -47,6 +47,35 @@ class Index extends IndexBase
         if (empty($movie)) {
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
         }
+
+        // 构造面包屑导航
+        $breadcrumb = [];
+        $breadcrumb[] = [
+            'name' => $movie->name,
+            'url' => $this->router->pathFor('indexDetail', [], ['id' => $movie->id]),
+            'current' => true,
+        ];
+        array_unshift($breadcrumb, [
+            'name' => $movie->category->name,
+            'url' => $this->router->pathFor('index', [], ['cid' => $movie->category->id]),
+            'current' => false,
+        ]);
+
+        if ($movie->category->parent) {
+            array_unshift($breadcrumb, [
+                'name' => $movie->category->parent->name,
+                'url' => $this->router->pathFor('index', [], ['cid' => $movie->category->parent->id]),
+                'current' => false,
+            ]);
+        }
+        array_unshift($breadcrumb, [
+            'name' => '首页',
+            'url' => $this->router->pathFor('index'),
+            'current' => false,
+        ]);
+        $this->view['breadcrumb'] = $breadcrumb;
+
+
         // Render index view
         return $this->view->render($response, 'index/detail.html', compact('movie'));
     }
