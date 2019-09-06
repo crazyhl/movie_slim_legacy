@@ -3,7 +3,9 @@
 {% block css %}
 <style>
     .category-block:last-child {
-        margin-bottom: 6rem!important;
+        margin-bottom: 2rem!important;
+    }
+    .movie-cover {
     }
 </style>
 {% endblock %}
@@ -19,20 +21,22 @@
     </ul>
     {% for newestMovieList in newestMovieListByCategory %}
     <div class="row category-block ml-0 mr-0 mb-5">
-        <div class="col-md-2 col-12">
-            {{newestMovieList['category']['name']}}
+        <div class="col-md-2 col-12 d-flex flex-row flex-md-column justify-content-between justify-content-md-start">
+            <div class="mb-md-2">{{newestMovieList['category']['name']}}</div>
+            <div>{{newestMovieList['category']['name']}}</div>
         </div>
         <div class="col-md-10 col-12">
             <div class="row">
                 {% for movie in newestMovieList['movieList'] %}
-                <div class="col-3">
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="text-dark text-decoration-none" href="{{ path_for('indexDetail', {}, {'id': movie.id})}}">
                     <div class="card" >
-                        <img class="card-img-top" src="{{movie['pic']}}" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text text-truncate">{{movie['name']}}</p>
+                        <img class="card-img-top img-thumbnail" src="{{movie['pic']}}" alt="Card image cap">
+                        <div class="card-body p-1">
+                            <p class="card-text text-truncate small">{{movie['name']}}</p>
                         </div>
                     </div>
-
+                    </a>
                 </div>
                 {% endfor %}
             </div>
@@ -43,7 +47,7 @@
 
 </div>
 
-<footer class="fixed-bottom container pr-0 pl-0 pt-3 pb-3 text-center bg-light small">
+<footer class="container pr-0 pl-0 pt-3 pb-3 text-center bg-light small">
     {{ title|default('') }}为您提供最新好看的电视剧、电影、动漫、综艺节目推荐和排行榜并可在线免费观看最新动作片、喜剧片、爱情片、搞笑片高清下载等,高清视频免费电影网站尽在{{ title|default('') }}。
     <br />
     本网站为非赢利性站点，所有内容均由机器人采集于互联网，视频内容请查看播放源，本站不存储任何内容！

@@ -84,7 +84,7 @@ class Index extends IndexBase
 
             $newestMovieListQuery = Movie::with(['category'])->whereIn('category_id', $categoryIdArr)
                 ->orderBy('updated_at', 'DESC')
-                ->limit(12);
+                ->limit(6);
             if (!$isLogin) {
                 $newestMovieListQuery->where('is_show', 1);
             }
