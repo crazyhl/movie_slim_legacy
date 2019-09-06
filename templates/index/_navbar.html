@@ -10,7 +10,7 @@
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link {{activeNav == 'home' ? 'active'}}" href="{{ path_for('index')}}">首页</a>
             {% for category in categories %}
-            <a class="nav-item nav-link {{activeNav == category.id ? 'active'}}" href="{{ path_for('index', {}, {'cid': category.id})}}">
+            <a class="nav-item nav-link {{activeNav == category.id ? 'active'}} {{0 == category.is_show ? 'text-danger'}}" href="{{ path_for('index', {}, {'cid': category.id})}}">
                 {{category['name']}}
             </a>
             {% endfor %}
