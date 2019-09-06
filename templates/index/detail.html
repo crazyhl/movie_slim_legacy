@@ -68,18 +68,18 @@
         $('#iframe').css('width', '100%');
         $("#iframe").addClass('container');
         let frameWidth = $('#iframe').innerWidth()
-        $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
+        $('#iframe').height(Math.ceil(frameWidth / 16 * 9))
 
         $("body").parent().css("overflow-y","auto");
         $("body").parent().css("overflow-x","auto");
     }
 
     $(function () {
-        let frameWidth = $('#iframe').innerWidth()
-        $('#iframe').height(Math.ceil(frameWidth / 4 * 3))
-        $("#iframe").css('display', 'none');
-        console.log(frameWidth);
-
+        // let frameWidth = $('#iframe').innerWidth()
+        // $('#iframe').height(Math.ceil(frameWidth /  16 * 9))
+        // $("#iframe").css('display', 'none');
+        // console.log(frameWidth);
+        initIFrameSize();
 
         $('.playBtn').click(function () {
             let url = $(this).data('url');
