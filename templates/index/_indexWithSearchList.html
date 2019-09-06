@@ -1,7 +1,7 @@
-{% if categoryMovieList != false %}
+{% if searchMovieList != false %}
 
 <div class="row category-block ml-0 mr-0 mb-1">
-    {% for movie in categoryMovieList['data'] %}
+    {% for movie in searchMovieList['data'] %}
     <div class="col-6 col-md-4 col-xl-2 mb-2">
         <a class="text-dark text-decoration-none" href="{{ path_for('indexDetail', {}, {'id': movie.id})}}">
             <div class="card" >
@@ -18,7 +18,7 @@
 </div>
 <div class="row ">
     <div class="m-auto">
-        {{links (categoryMovieList, true, '')}}
+        {{links (searchMovieList, true, '')}}
     </div>
 </div>
 {% endif %}

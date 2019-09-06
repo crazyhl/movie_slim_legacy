@@ -16,8 +16,11 @@ class Index extends IndexBase
         // Render index view
         $this->view['activeNav'] = 'home';
         $categoryId = $request->getQueryParam('cid', 0);
+        $keywords = $request->getQueryParam('word');
 
-        if ($categoryId > 0) {
+        if ($keywords) {
+            $this->search($request);
+        } else if ($categoryId > 0) {
             $this->getCategoryData($request);
         } else {
             $this->getIndexData($request);
@@ -26,21 +29,7 @@ class Index extends IndexBase
         return $this->view->render($response, 'index/index.html', $args);
     }
 
-    public function search(Request $request, Response $response, $args)
-    {
-        $this->view['activeNav'] = 'home';
-        $keywords = $request->getParsedBodyParam('word');
-        $movies = [];
-        if ($keywords) {
-            $movieQuery = Movie::where('name', 'like', '%' . $keywords . '%');
-            if (!$this->isLogin($request)) {
-                $movieQuery->where('is_show', 1);
-            }
-            $movies = $movieQuery->get();
-        }
-        // Render index view
-        return $this->view->render($response, 'index/index.html', compact('movies'));
-    }
+
 
     public function detail(Request $request, Response $response, $args)
     {
@@ -145,5 +134,43 @@ class Index extends IndexBase
         $this->view['activeNav'] = $activeNavId;
         $this->view['breadcrumb'] = $breadcrumb;
         $this->view['categoryMovieList'] = $movieList;
+    }
+
+    private function search(Request $request)
+    {
+        $keywords = $request->getQueryParam('word');
+
+
+
+
+
+        // 构造面包屑导航
+        $breadcrumb = [];
+
+        $breadcrumb[] = [
+            'name' => '首页',
+            'url' => $this->router->pathFor('index'),
+            'current' => false,
+        ];
+
+        $breadcrumb[] = [
+            'name' => '搜索『 ' . $keywords . '』',
+            'url' => $this->router->pathFor('index', [], ['word' => $keywords]),
+            'current' => true,
+        ];
+
+        // 构造查询id
+
+        // 构造查询
+        $movieQuery = Movie::where('name', 'like', '%' . $keywords . '%')->orderBy('updated_at', 'DESC');
+        if (!$this->isLogin($request)) {
+            $movieQuery->where('is_show', 1);
+        }
+
+
+        $movieList = $movieQuery->myPaginate(18);
+        $this->view['activeNav'] = 'home';
+        $this->view['breadcrumb'] = $breadcrumb;
+        $this->view['searchMovieList'] = $movieList;
     }
 }

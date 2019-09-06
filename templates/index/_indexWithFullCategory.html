@@ -5,7 +5,7 @@
     {% endfor %}
 </ul>
 {% for newestMovieList in newestMovieListByCategory %}
-<div class="row category-block ml-0 mr-0 mb-5">
+<div class="row full-category-list category-block ml-0 mr-0 mb-5">
     <div class="col-md-2 col-12 d-flex flex-row flex-md-column justify-content-between justify-content-md-start">
         <div class="mb-md-2">
             <a class="text-dark" href="{{ path_for('index', {}, {'cid': newestMovieList['category'].id})}}">
