@@ -21,9 +21,7 @@ return function (App $app) {
     $container['view'] = function ($c) {
         $settings = $c->get('settings')['view'];
 
-        $view = new Twig($settings['template_path'], [
-            'cache' => $settings['cache'],
-        ]);
+        $view = new Twig($settings['template_path'], $settings);
 
         // Instantiate and add Slim specific extension
         $router = $c->get('router');
