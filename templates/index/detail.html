@@ -47,10 +47,12 @@
         <div class="card-body">
             {% for movieList in sourceMovie.format_movie_list %}
             <button type="button"
+                    id="{{sourceMovie.sourceWebsite.name}}-{{loop.index}}"
                     class="btn btn-primary btn-sm playBtn mb-2"
                     data-source-name="{{sourceMovie.sourceWebsite.name}}"
                     data-movie-name="{{movie.name}}"
                     data-video-name="{{movieList.name}}"
+                    data-index="{{loop.index}}"
                     data-url="{{movieList.url}}">
                 {{movieList.name}}
             </button>
@@ -85,19 +87,39 @@
         $("body").parent().css("overflow-x","auto");
     }
 
+    let nextName = null;
+    let nextIndex = 0;
+
+    function getNextVideo() {
+        let ele = $('#' + nextName + '-' + nextIndex);
+        if (ele == undefined || ele[0] == undefined) {
+            return '';
+        }
+        let sourceName = ele.data('sourceName');
+        let movieName = ele.data('movieName');
+        let videoName = ele.data('videoName');
+        let url = ele.data('url');
+        nextIndex++;
+
+        $("#current-play").text('正在播放:' + sourceName  + '-'  + movieName  + '-'+ videoName)
+        $("#current-play").css('display', 'block');
+
+        return url;
+    }
+
     $(function () {
-        // let frameWidth = $('#iframe').innerWidth()
-        // $('#iframe').height(Math.ceil(frameWidth /  16 * 9))
         $("#iframe").css('display', 'none');
-        // console.log(frameWidth);
         initIFrameSize();
 
 
-
         $('.playBtn').click(function () {
-            let url = $(this).data('url');
-            $("#current-play").text('正在播放:' + $(this).data('sourceName')  + '-'  + $(this).data('movieName')  + '-'+ $(this).data('videoName'))
-            $("#current-play").css('display', 'block');
+            nextName = $(this).data('sourceName');
+            nextIndex = $(this).data('index');
+            let url =  getNextVideo();
+
+            if (url === '') {
+                return;
+            }
 
             let script = '<html>' +
                 '<head></head>' +
@@ -135,7 +157,16 @@
                 'parent.initIFrameSize();' +
                 '});' +
                 'dp.on("ended", function () {' +
-                'console.log("播放完成")' +
+                'console.log("播放完成");' +
+                'let url = parent.getNextVideo();' +
+                'if (url === "") {' +
+                'return;' +
+                '}' +
+                'dp.switchVideo({' +
+                'url: url,' +
+                'type: "hls"' +
+                '});' +
+                'dp.play();' +
                 '});' +
                 '<' +
                 '/script>' +
