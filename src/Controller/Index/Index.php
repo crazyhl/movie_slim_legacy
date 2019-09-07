@@ -74,7 +74,7 @@ class Index extends IndexBase
             'current' => false,
         ]);
         $this->view['breadcrumb'] = $breadcrumb;
-
+        $this->setTitle($movie->name);
 
         // Render index view
         return $this->view->render($response, 'index/detail.html', compact('movie'));
