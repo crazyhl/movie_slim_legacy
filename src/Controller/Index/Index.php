@@ -97,9 +97,11 @@ class Index extends IndexBase
         // 构造一批初始化数据
         $isLogin = $this->isLogin($request);
         if ($isLogin) {
-            $categories = Category::with('childList')->where('parent_id', 0)->get();
+            $specialLevel = $_SESSION['user']['special_level'];
+            $specialLevelArr = explode(',', $specialLevel);
+            $categories = Category::with('childList')->whereIn('special_level', $specialLevelArr)->where('parent_id', 0)->get();
         } else {
-            $categories = Category::with('childList')->where('parent_id', 0)->where('is_show', 1)->get();
+            $categories = Category::with('childList')->where('parent_id', 0)->where('special_level', 0)->where('is_show', 1)->get();
         }
 
         $newestMovieListByCategory = [];
