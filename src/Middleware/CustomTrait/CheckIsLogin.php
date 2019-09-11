@@ -38,11 +38,8 @@ trait CheckIsLogin
 
             if ($isLoginCondition) {
                 // 已登录
-                if (empty($_SESSION['uid'])) {
-                    // 如果是 remember 则要初始化 session
-                    $_SESSION['uid'] = $loginUser->id;
-                    $_SESSION['user'] = $loginUser;
-                }
+                $_SESSION['uid'] = $loginUser->id;
+                $_SESSION['user'] = $loginUser;
                 return true;
             }
 
