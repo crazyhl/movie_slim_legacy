@@ -45,6 +45,11 @@ class SourceMovie extends Base
             'hao.zuida-youku.com' => 'kuku.zuida-youku.com',
             'shenling.dijiang-zuida.com' => 'yiyi.55zuiday.com',
             'iqiyi.qq-zuidazy.com' => 'feifei.feifeizuida.com',
+            'videox6.lcfcyyek.com' => 'videox6.taoquan88.com',
+            'videox3.ju1zhe.com' => 'videox3.zhigaogongshui.com',
+            'cdn2-youku.jshuajiu.com' => 'cdn2-youku.kangliyunbao.com',
+            'cdn2.pjwl888.com' => 'cdn2.nixiangwozuo.com',
+            'cdn3.pjwl888.com' => 'cdn3.nixiangwozuo.com',
         ];
 
         $movieList = explode('#', $this->movie_list);
