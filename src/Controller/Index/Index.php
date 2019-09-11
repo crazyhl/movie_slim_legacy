@@ -21,14 +21,13 @@ class Index extends IndexBase
         if ($keywords) {
             $this->search($request);
         } else if ($categoryId > 0) {
-            $this->getCategoryData($request);
+            $this->getCategoryData($request, $response);
         } else {
             $this->getIndexData($request);
         }
 
         return $this->view->render($response, 'index/index.html', $args);
     }
-
 
 
     public function detail(Request $request, Response $response, $args)
@@ -47,6 +46,18 @@ class Index extends IndexBase
         if (empty($movie)) {
             return $response->withRedirect($this->container->router->pathFor('index'), 200);
         }
+        if ($this->isLogin($request)) {
+            $specialLevel = $_SESSION['user']['special_level'];
+            $specialLevelArr = explode(',', $specialLevel);
+            if (!in_array($movie->category->special_level, $specialLevelArr)) {
+                return $response->withRedirect($this->container->router->pathFor('index'), 200);
+            }
+        } else {
+            if ($movie->category->special_level != 0) {
+                return $response->withRedirect($this->container->router->pathFor('index'), 200);
+            }
+        }
+
 
         // 构造面包屑导航
         $breadcrumb = [];
@@ -118,12 +129,22 @@ class Index extends IndexBase
         $this->view['newestMovieListByCategory'] = $newestMovieListByCategory;
     }
 
-    private function getCategoryData(Request $request)
+    private function getCategoryData(Request $request, Response $response)
     {
         $categoryId = $request->getQueryParam('cid', 0);
         $activeNavId = $categoryId;
 
-        $category = Category::with(['parent', 'childList'])->where('id', $categoryId)->first();
+        if (!$this->isLogin($request)) {
+            $specialLevel = $_SESSION['user']['special_level'];
+            $specialLevelArr = explode(',', $specialLevel);
+            $category = Category::with(['parent', 'childList'])->where('id', $categoryId)->whereIn('special_level', $specialLevelArr)->first();
+        } else {
+            $category = Category::with(['parent', 'childList'])->where('id', $categoryId)->where('special_level', 0)->first();
+        }
+
+        if (empty($category)) {
+            return $response->withRedirect($this->container->router->pathFor('index'), 200);
+        }
         // 构造面包屑导航
         $breadcrumb = [];
         $breadcrumb[] = [
@@ -185,9 +206,16 @@ class Index extends IndexBase
         ];
 
         // 构造查询id
-
+        // 查询可用分类id
+        if (!$this->isLogin($request)) {
+            $specialLevel = $_SESSION['user']['special_level'];
+            $specialLevelArr = explode(',', $specialLevel);
+            $categoryIdArr = Category::with(['parent', 'childList'])->whereIn('special_level', $specialLevelArr)->pluck('id')->toArray();
+        } else {
+            $categoryIdArr = Category::with(['parent', 'childList'])->where('special_level', 0)->pluck('id')->toArray();
+        }
         // 构造查询
-        $movieQuery = Movie::where('name', 'like', '%' . $keywords . '%')->orderBy('updated_at', 'DESC');
+        $movieQuery = Movie::where('name', 'like', '%' . $keywords . '%')->whereIn('category_id', $categoryIdArr)->orderBy('updated_at', 'DESC');
         if (!$this->isLogin($request)) {
             $movieQuery->where('is_show', 1);
         }

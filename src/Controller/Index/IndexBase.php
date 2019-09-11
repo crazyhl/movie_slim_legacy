@@ -18,9 +18,12 @@ class IndexBase extends Base
         parent::__construct($container);
         // 构造一批初始化数据
         if ($this->isLogin($container->request)) {
-            $categories = Category::where('parent_id', 0)->get();
+            $specialLevel = $_SESSION['user']['special_level'];
+            $specialLevelArr = explode(',', $specialLevel);
+
+            $categories = Category::where('parent_id', 0)->whereIn('special_level', $specialLevelArr)->get();
         } else {
-            $categories = Category::where('parent_id', 0)->where('is_show', 1)->get();
+            $categories = Category::where('parent_id', 0)->where('special_level', 0)->where('is_show', 1)->get();
         }
 
         $this->view['categories'] = $categories;
