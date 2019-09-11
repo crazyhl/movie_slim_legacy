@@ -57,7 +57,11 @@ class User extends Base
         $user = UserModel::find($uid);
         if ($user != 0) {
             $user->username = $request->getParsedBodyParam('username');
-            $user->password = password_hash($request->getParsedBodyParam('password'), PASSWORD_DEFAULT);
+            $newPassword = $request->getParsedBodyParam('password', '');
+            if ($newPassword &&  $newPassword != $user->password) {
+                $user->password = password_hash($request->getParsedBodyParam('password'), PASSWORD_DEFAULT);
+            }
+            $user->special_level = $request->getParsedBodyParam('special_level', '0');
 
             $user->save();
         }
