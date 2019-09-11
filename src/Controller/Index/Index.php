@@ -98,6 +98,8 @@ class Index extends IndexBase
         $isLogin = $this->isLogin($request);
         if ($isLogin) {
             $specialLevel = $_SESSION['user']['special_level'];
+            var_dump($specialLevel);
+            return;
             $specialLevelArr = explode(',', $specialLevel);
             $categories = Category::with('childList')->whereIn('special_level', $specialLevelArr)->where('parent_id', 0)->get();
         } else {
