@@ -54,6 +54,7 @@ class InitDataBase extends BaseCommand
             $table->string('password', 255)->comment('密码');
             $table->tinyInteger('is_admin')->default(0)->comment('是否是管理员标识');
             $table->string('token')->default('')->unique()->comment('是否是管理员标识');
+            $table->string('special_level')->default('0')->comment('特殊等级');
             $table->timestamps();
         });
         $output->writeln($tableName . ' 创建完成');
@@ -67,6 +68,7 @@ class InitDataBase extends BaseCommand
             $table->integer('parent_id')->index()->default(0)->comment('父分类id');
             $table->tinyInteger('is_show')->default(0)->comment('是否外显');
             $table->tinyInteger('order')->default(0)->comment('排序，数字越大越靠前');
+            $table->tinyInteger('special_level')->default(0)->index()->comment('特殊等级');
             $table->timestamps();
         });
         $output->writeln($tableName . ' 创建完成');

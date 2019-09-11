@@ -169,10 +169,6 @@ class Index extends IndexBase
     {
         $keywords = $request->getQueryParam('word');
 
-
-
-
-
         // 构造面包屑导航
         $breadcrumb = [];
 
