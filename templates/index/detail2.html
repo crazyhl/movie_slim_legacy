@@ -2,6 +2,11 @@
 
 {% block css %}
 <link rel="stylesheet" href="/dplayer/DPlayer.min.css">
+<style>
+    #current-play {
+        display: none;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -25,6 +30,9 @@
                 <span class="small">{{movie.description|striptags}}</span>
             </div>
         </div>
+    </div>
+    <div class="alert alert-primary mt-2" id="current-play" role="alert">
+        A simple primary alert—check it out!
     </div>
     <div id="dplayer"></div>
     {% for sourceMovie in movie.sourceMovies %}
