@@ -136,7 +136,7 @@ class Index extends IndexBase
         $categoryId = $request->getQueryParam('cid', 0);
         $activeNavId = $categoryId;
 
-        if (!$this->isLogin($request)) {
+        if ($this->isLogin($request)) {
             $specialLevel = $_SESSION['user']['special_level'];
             $specialLevelArr = explode(',', $specialLevel);
             $category = Category::with(['parent', 'childList'])->where('id', $categoryId)->whereIn('special_level', $specialLevelArr)->first();
