@@ -209,7 +209,7 @@ class Index extends IndexBase
 
         // 构造查询id
         // 查询可用分类id
-        if (!$this->isLogin($request)) {
+        if ($this->isLogin($request)) {
             $specialLevel = $_SESSION['user']['special_level'];
             $specialLevelArr = explode(',', $specialLevel);
             $categoryIdArr = Category::with(['parent', 'childList'])->whereIn('special_level', $specialLevelArr)->pluck('id')->toArray();
