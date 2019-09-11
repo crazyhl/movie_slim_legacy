@@ -2,16 +2,6 @@
 
 {% block css %}
 <link rel="stylesheet" href="/dplayer/DPlayer.min.css">
-<style>
-    #iframe {
-        width: 100%;
-        border: 0;
-        overflow: hidden;
-    }
-    #current-play {
-        display: none;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -35,9 +25,6 @@
                 <span class="small">{{movie.description|striptags}}</span>
             </div>
         </div>
-    </div>
-    <div class="alert alert-primary mt-2" id="current-play" role="alert">
-        A simple primary alert—check it out!
     </div>
     <div id="dplayer"></div>
     {% for sourceMovie in movie.sourceMovies %}
@@ -67,26 +54,6 @@
 <script src="/js/hls.min.js"></script>
 <script src="/dplayer/DPlayer.min.js"></script>
 <script>
-    function changeIframeSize () {
-        $('#iframe').css('height', '100vh');
-        $('#iframe').css('width', '100vw');
-        $("#iframe").removeClass('container');
-
-        $(window).scrollTop($("#iframe").offset().top);
-        $("body").parent().css("overflow-y","hidden");
-        $("body").parent().css("overflow-x","hidden");
-    }
-
-    function initIFrameSize() {
-        $('#iframe').css('width', '100%');
-        $("#iframe").addClass('container');
-        let frameWidth = $('#iframe').innerWidth()
-        $('#iframe').height(Math.ceil(frameWidth / 16 * 9))
-
-        $("body").parent().css("overflow-y","auto");
-        $("body").parent().css("overflow-x","auto");
-    }
-
     let nextName = null;
     let nextIndex = 0;
 
@@ -118,14 +85,28 @@
             }
 
             const dp = new DPlayer({
-            container: document.getElementById("dplayer"),
-            autoplay: true,
-            video: {
-            url: url,
-            type: "hls"
-            }
+                container: document.getElementById("dplayer"),
+                autoplay: true,
+                video: {
+                    url: url,
+                    type: "hls",
+                }
             });
-            dp.play();
+
+            dp.on("ended", function () {
+                console.log("播放完成");
+                let url = parent.getNextVideo();
+                if (url === "") {
+                    dp.fullScreen.cancel('web');
+                    dp.fullScreen.cancel('browser');
+                    return;
+                }
+                dp.switchVideo({
+                    url: url,
+                    type: "hls"
+                });
+                dp.play();
+            });
         });
     });
 </script>
