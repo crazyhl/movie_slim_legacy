@@ -76,17 +76,47 @@
         let url = ele.data('url');
         nextIndex++;
 
-        $("#current-play").text('正在播放:' + sourceName  + '-'  + movieName  + '-'+ videoName)
+        $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
         $("#current-play").css('display', 'block');
 
         return url;
+    }
+
+    function getPreVideo() {
+        let ele = $('#' + nextName + '-' + (nextIndex - 2));
+        if (ele == undefined || ele[0] == undefined) {
+            return '';
+        }
+        let sourceName = ele.data('sourceName');
+        let movieName = ele.data('movieName');
+        let videoName = ele.data('videoName');
+        let url = ele.data('url');
+        nextIndex--;
+
+        $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
+        $("#current-play").css('display', 'block');
+
+        return url;
+    }
+
+    function changeVideo(player, url) {
+        if (url === "") {
+            player.fullScreen.cancel('web');
+            player.fullScreen.cancel('browser');
+            return;
+        }
+        player.switchVideo({
+            url: url,
+            type: "hls"
+        });
+        player.play();
     }
 
     $(function () {
         $('.playBtn').click(function () {
             nextName = $(this).data('sourceName');
             nextIndex = $(this).data('index');
-            let url =  getNextVideo();
+            let url = getNextVideo();
 
             if (url === '') {
                 return;
@@ -98,22 +128,29 @@
                 video: {
                     url: url,
                     type: "hls",
-                }
+                },
+                contextmenu: [
+                    {
+                        text: '上一集',
+                        click: (player) => {
+                            let url = getPreVideo();
+                            changeVideo(player, url);
+                        },
+                    },
+                    {
+                        text: '下一集',
+                        click: (player) => {
+                            let url = getNextVideo();
+                            changeVideo(player, url);
+                        },
+                    },
+                ],
             });
 
             dp.on("ended", function () {
                 console.log("播放完成");
-                let url = parent.getNextVideo();
-                if (url === "") {
-                    dp.fullScreen.cancel('web');
-                    dp.fullScreen.cancel('browser');
-                    return;
-                }
-                dp.switchVideo({
-                    url: url,
-                    type: "hls"
-                });
-                dp.play();
+                let url = getNextVideo();
+                changeVideo(dp, url);
             });
         });
     });
