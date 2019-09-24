@@ -29,6 +29,7 @@ class Base
         $this->container->db;
         // 初始化模板默认参数
         $this->container->view['title'] = getenv('NAME');
+        $this->container->view['baseTitle'] = getenv('NAME');
         $this->container->view['website'] = getenv('WEBSITE');
         // 把 view 放到 controller 里面
         $this->view = $this->container->view;
