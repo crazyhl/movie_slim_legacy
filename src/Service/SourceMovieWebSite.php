@@ -130,6 +130,11 @@ class SourceMovieWebSite
                 $isSave = true;
             }
 
+            if ($movie->note != $data['note']) {
+                $movie->note = $data['note'];
+                $isSave = true;
+            }
+
             if ($isSave) {
                 $movie->save();
             }
