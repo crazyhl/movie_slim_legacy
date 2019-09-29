@@ -3,7 +3,7 @@
 {% block css %}
 <!--<link rel="stylesheet" href="/dplayer/DPlayer.min.css">-->
 <style>
-    #current-play {
+    .current-play {
         display: none;
     }
 </style>
@@ -31,8 +31,11 @@
             </div>
         </div>
     </div>
-    <div id="dplayer" class="mt-2"></div>
-    <div class="alert alert-primary" id="current-play" role="alert">
+    <div class="alert alert-primary mt-2 current-play" role="alert">
+        this is current play info
+    </div>
+    <div id="dplayer"></div>
+    <div class="alert alert-primary current-play" role="alert">
         this is current play info
     </div>
     {% for sourceMovie in movie.sourceMovies %}
@@ -77,8 +80,8 @@
         changeBtnStatus(ele);
         nextIndex++;
 
-        $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
-        $("#current-play").css('display', 'block');
+        $(".current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
+        $(".current-play").css('display', 'block');
         $('title').html(movieName + videoName + '(' + sourceName + ') - {{baseTitle}}')
 
         return url;
@@ -117,8 +120,8 @@
         changeBtnStatus(ele);
         nextIndex--;
 
-        $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
-        $("#current-play").css('display', 'block');
+        $(".current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
+        $(".current-play").css('display', 'block');
 
         return url;
     }
