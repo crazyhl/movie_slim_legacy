@@ -40,8 +40,8 @@
         this is current play info
     </div>
     {% for sourceMovie in movie.sourceMovies %}
-    <div class="card mb-2 mt-2 pt-1 pb-1 pl-2 pr-2">
-        <h6 class="card-header">{{sourceMovie.sourceWebsite.name}}</h6>
+    <div class="card mb-2 mt-2">
+        <h6 class="card-header  pt-1 pb-1 pl-2 pr-2">{{sourceMovie.sourceWebsite.name}}</h6>
         <div class="card-body p-2">
             {% for movieList in sourceMovie.format_movie_list %}
             <button type="button"
