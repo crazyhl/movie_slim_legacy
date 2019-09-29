@@ -1,12 +1,8 @@
 {% extends "/layout/index/base.html" %}
 
 {% block css %}
+<!--<link rel="stylesheet" href="/dplayer/DPlayer.min.css">-->
 <style>
-    #iframe {
-        width: 100%;
-        border: 0;
-        overflow: hidden;
-    }
     #current-play {
         display: none;
     }
@@ -38,9 +34,7 @@
     <div class="alert alert-primary mt-2" id="current-play" role="alert">
         A simple primary alert—check it out!
     </div>
-</div>
-    <iframe frameborder="0" id="iframe" class="mt-2 mb-2 container p-0" allowtransparency="true" allowfullscreen="true"></iframe>
-<div class="container">
+    <div id="dplayer"></div>
     {% for sourceMovie in movie.sourceMovies %}
     <div class="card mb-2 mt-2">
         <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
@@ -63,30 +57,11 @@
 </div>
 
 {{ include('index/_footer.html') }}
-
 {% endblock %}
 {% block js %}
+<script src="/js/hls.min.js"></script>
+<script src="/dplayer_modify/DPlayer.min.js"></script>
 <script>
-    function changeIframeSize () {
-        $('#iframe').css('height', '100vh');
-        $('#iframe').css('width', '100vw');
-        $("#iframe").removeClass('container');
-
-        $(window).scrollTop($("#iframe").offset().top);
-        $("body").parent().css("overflow-y","hidden");
-        $("body").parent().css("overflow-x","hidden");
-    }
-
-    function initIFrameSize() {
-        $('#iframe').css('width', '100%');
-        $("#iframe").addClass('container');
-        let frameWidth = $('#iframe').innerWidth()
-        $('#iframe').height(Math.ceil(frameWidth / 16 * 9))
-
-        $("body").parent().css("overflow-y","auto");
-        $("body").parent().css("overflow-x","auto");
-    }
-
     let nextName = null;
     let nextIndex = 0;
 
@@ -101,79 +76,108 @@
         let url = ele.data('url');
         nextIndex++;
 
-        $("#current-play").text('正在播放:' + sourceName  + '-'  + movieName  + '-'+ videoName)
+        $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
         $("#current-play").css('display', 'block');
 
         return url;
     }
 
+    function hasNext() {
+        let ele = $('#' + nextName + '-' + nextIndex);
+        if (ele == undefined || ele[0] == undefined) {
+            return false;
+        }
+        return true;
+    }
+
+    function getPreVideo() {
+        let ele = $('#' + nextName + '-' + (nextIndex - 2));
+        if (ele == undefined || ele[0] == undefined) {
+            return '';
+        }
+        let sourceName = ele.data('sourceName');
+        let movieName = ele.data('movieName');
+        let videoName = ele.data('videoName');
+        let url = ele.data('url');
+        nextIndex--;
+
+        $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
+        $("#current-play").css('display', 'block');
+
+        return url;
+    }
+
+    function changeVideo(player, url) {
+        if (url === "") {
+            player.fullScreen.cancel('web');
+            player.fullScreen.cancel('browser');
+            return;
+        }
+        player.switchVideo({
+            url: url,
+            type: "hls"
+        });
+        player.play();
+        changeShowNextEpisode(player);
+    }
+
+    function changeShowNextEpisode(player) {
+        let url = hasNext();
+        if (url === false) {
+            player.hideNextEpisodeButton();
+        } else {
+            player.showNextEpisodeButton();
+        }
+    }
+
     $(function () {
-        $("#iframe").css('display', 'none');
-        initIFrameSize();
-
-
         $('.playBtn').click(function () {
             nextName = $(this).data('sourceName');
             nextIndex = $(this).data('index');
-            let url =  getNextVideo();
+            let url = getNextVideo();
 
             if (url === '') {
                 return;
             }
 
-            let script = '<html>' +
-                '<head></head>' +
-                '<link rel="stylesheet" href="//vd.chrishao.com/dplayer/DPlayer.min.css">' +
-                '<style>' +
-                'html' +
-                '{' +
-                'padding:0;margin:0;' +
-                '}' +
-                'body' +
-                '{' +
-                'width:100vw;height:100vh;padding:0;margin:0;' +
-                'overflow: hidden;' +
-                '}' +
-                '</style>' +
-                '<body>' +
-                '<div id="dplayer" style="width: 100vw;height: 100vh;"></div>' +
-                '<script src="//vd.chrishao.com/js/hls.min.js"><' +
-                '/script><script src="//vd.chrishao.com/dplayer/DPlayer.min.js"><' +
-                '/script><script>' +
-                'const dp = new DPlayer({' +
-                'container: document.getElementById("dplayer"),' +
-                'autoplay: true,' +
-                'video: {' +
-                'url: "' + url + '",' +
-                'type: "hls"' +
-                '}' +
-                '});' +
-                'dp.on("webfullscreen", function () {' +
-                'let fatherEle = window.parent.document.getElementById("iframe");' +
-                'parent.changeIframeSize();' +
-                '});' +
-                'dp.on("webfullscreen_cancel", function () {' +
-                'let fatherEle = window.parent.document.getElementById("iframe");' +
-                'parent.initIFrameSize();' +
-                '});' +
-                'dp.on("ended", function () {' +
-                'console.log("播放完成");' +
-                'let url = parent.getNextVideo();' +
-                'if (url === "") {' +
-                'return;' +
-                '}' +
-                'dp.switchVideo({' +
-                'url: url,' +
-                'type: "hls"' +
-                '});' +
-                'dp.play();' +
-                '});' +
-                '<' +
-                '/script>' +
-                '</body>' +
-                '</html>';
-            $('#iframe').attr('srcdoc', script);
-            $("#iframe").css('display', 'block');
+            const dp = new DPlayer({
+                container: document.getElementById("dplayer"),
+                autoplay: true,
+                video: {
+                    url: url,
+                    type: "hls",
+                },
+                // nextEpisode: true,
+                contextmenu: [
+                    {
+                        text: '上一集',
+                        click: (player) => {
+                            let url = getPreVideo();
+                            changeVideo(player, url);
+                        },
+                    },
+                    {
+                        text: '下一集',
+                        click: (player) => {
+                            let url = getNextVideo();
+                            changeVideo(player, url);
+                        },
+                    },
+                ],
+            });
+
+            changeShowNextEpisode(dp);
+
+            dp.on("ended", function () {
+                let url = getNextVideo();
+                changeVideo(dp, url);
+            });
+
+            dp.on("change_next_episode", function () {
+                console.log('aaaa');
+                let url = getNextVideo();
+                changeVideo(dp, url);
+            });
         });
     });
 </script>

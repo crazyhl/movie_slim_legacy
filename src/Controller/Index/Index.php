@@ -88,7 +88,7 @@ class Index extends IndexBase
         $this->setTitle($movie->name);
 
         // Render index view
-        return $this->view->render($response, 'index/detail2.html', compact('movie'));
+        return $this->view->render($response, 'index/detail.html', compact('movie'));
     }
 
     // 获取首页数据

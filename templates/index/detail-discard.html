@@ -1,0 +1,180 @@
+{% extends "/layout/index/base.html" %}
+
+{% block css %}
+<style>
+    #iframe {
+        width: 100%;
+        border: 0;
+        overflow: hidden;
+    }
+    #current-play {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {{ include('index/_navbar.html') }}
+    {% if breadcrumb != false %}
+    {{breadcrumb(breadcrumb, '', '')}}
+    {% endif %}
+    <div class="alert alert-warning" role="alert">
+        播放不了的就换别的源，如果只有一个源，就看别的去
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div><img src="{{movie.pic}}" style="width: 100%"></div>
+        </div>
+        <div class="col-sm-10">
+            <div>
+                {{movie.name}} <span class="small">{{movie.note}}</span><br/>
+                {{movie.category.name}} {{movie.director}} {{movie.actor}} {{movie.lang}} {{movie.area}}
+                {{movie.year}}<br/>
+                <span class="small">{{movie.description|striptags}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-primary mt-2" id="current-play" role="alert">
+        A simple primary alert—check it out!
+    </div>
+</div>
+    <iframe frameborder="0" id="iframe" class="mt-2 mb-2 container p-0" allowtransparency="true" allowfullscreen="true"></iframe>
+<div class="container">
+    {% for sourceMovie in movie.sourceMovies %}
+    <div class="card mb-2 mt-2">
+        <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
+        <div class="card-body">
+            {% for movieList in sourceMovie.format_movie_list %}
+            <button type="button"
+                    id="{{sourceMovie.sourceWebsite.name}}-{{loop.index}}"
+                    class="btn btn-primary btn-sm playBtn mb-2"
+                    data-source-name="{{sourceMovie.sourceWebsite.name}}"
+                    data-movie-name="{{movie.name}}"
+                    data-video-name="{{movieList.name}}"
+                    data-index="{{loop.index}}"
+                    data-url="{{movieList.url}}">
+                {{movieList.name}}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{{ include('index/_footer.html') }}
+
+{% endblock %}
+{% block js %}
+<script>
+    function changeIframeSize () {
+        $('#iframe').css('height', '100vh');
+        $('#iframe').css('width', '100vw');
+        $("#iframe").removeClass('container');
+
+        $(window).scrollTop($("#iframe").offset().top);
+        $("body").parent().css("overflow-y","hidden");
+        $("body").parent().css("overflow-x","hidden");
+    }
+
+    function initIFrameSize() {
+        $('#iframe').css('width', '100%');
+        $("#iframe").addClass('container');
+        let frameWidth = $('#iframe').innerWidth()
+        $('#iframe').height(Math.ceil(frameWidth / 16 * 9))
+
+        $("body").parent().css("overflow-y","auto");
+        $("body").parent().css("overflow-x","auto");
+    }
+
+    let nextName = null;
+    let nextIndex = 0;
+
+    function getNextVideo() {
+        let ele = $('#' + nextName + '-' + nextIndex);
+        if (ele == undefined || ele[0] == undefined) {
+            return '';
+        }
+        let sourceName = ele.data('sourceName');
+        let movieName = ele.data('movieName');
+        let videoName = ele.data('videoName');
+        let url = ele.data('url');
+        nextIndex++;
+
+        $("#current-play").text('正在播放:' + sourceName  + '-'  + movieName  + '-'+ videoName)
+        $("#current-play").css('display', 'block');
+
+        return url;
+    }
+
+    $(function () {
+        $("#iframe").css('display', 'none');
+        initIFrameSize();
+
+
+        $('.playBtn').click(function () {
+            nextName = $(this).data('sourceName');
+            nextIndex = $(this).data('index');
+            let url =  getNextVideo();
+
+            if (url === '') {
+                return;
+            }
+
+            let script = '<html>' +
+                '<head></head>' +
+                '<link rel="stylesheet" href="//vd.chrishao.com/dplayer/DPlayer.min.css">' +
+                '<style>' +
+                'html' +
+                '{' +
+                'padding:0;margin:0;' +
+                '}' +
+                'body' +
+                '{' +
+                'width:100vw;height:100vh;padding:0;margin:0;' +
+                'overflow: hidden;' +
+                '}' +
+                '</style>' +
+                '<body>' +
+                '<div id="dplayer" style="width: 100vw;height: 100vh;"></div>' +
+                '<script src="//vd.chrishao.com/js/hls.min.js"><' +
+                '/script><script src="//vd.chrishao.com/dplayer/DPlayer.min.js"><' +
+                '/script><script>' +
+                'const dp = new DPlayer({' +
+                'container: document.getElementById("dplayer"),' +
+                'autoplay: true,' +
+                'video: {' +
+                'url: "' + url + '",' +
+                'type: "hls"' +
+                '}' +
+                '});' +
+                'dp.on("webfullscreen", function () {' +
+                'let fatherEle = window.parent.document.getElementById("iframe");' +
+                'parent.changeIframeSize();' +
+                '});' +
+                'dp.on("webfullscreen_cancel", function () {' +
+                'let fatherEle = window.parent.document.getElementById("iframe");' +
+                'parent.initIFrameSize();' +
+                '});' +
+                'dp.on("ended", function () {' +
+                'console.log("播放完成");' +
+                'let url = parent.getNextVideo();' +
+                'if (url === "") {' +
+                'return;' +
+                '}' +
+                'dp.switchVideo({' +
+                'url: url,' +
+                'type: "hls"' +
+                '});' +
+                'dp.play();' +
+                '});' +
+                '<' +
+                '/script>' +
+                '</body>' +
+                '</html>';
+            $('#iframe').attr('srcdoc', script);
+            $("#iframe").css('display', 'block');
+        });
+    });
+</script>
+{% endblock %}
