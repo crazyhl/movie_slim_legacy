@@ -31,10 +31,10 @@
             </div>
         </div>
     </div>
-    <div class="alert alert-primary mt-2" id="current-play" role="alert">
-        A simple primary alert—check it out!
+    <div id="dplayer" class="mt-2"></div>
+    <div class="alert alert-primary" id="current-play" role="alert">
+        this is current play info
     </div>
-    <div id="dplayer"></div>
     {% for sourceMovie in movie.sourceMovies %}
     <div class="card mb-2 mt-2">
         <h5 class="card-header">{{sourceMovie.sourceWebsite.name}}</h5>
@@ -74,13 +74,27 @@
         let movieName = ele.data('movieName');
         let videoName = ele.data('videoName');
         let url = ele.data('url');
+        changeBtnStatus(ele);
         nextIndex++;
 
         $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
         $("#current-play").css('display', 'block');
-        $('title').html(movieName + videoName + '(' + sourceName + ') - {{baseTitle}}' )
+        $('title').html(movieName + videoName + '(' + sourceName + ') - {{baseTitle}}')
 
         return url;
+    }
+
+    function changeBtnStatus(currentPlayBtn) {
+        // 撤销所有的按钮样式
+        $('.playBtn').removeClass('disabled');
+        $('.playBtn').removeClass('btn-secondary');
+        $('.playBtn').removeClass('btn-primary');
+        $('.playBtn').addClass('btn-primary');
+        // 给当前播放的对应按钮增加属性
+        currentPlayBtn.addClass('btn-secondary')
+        currentPlayBtn.removeClass('tn-primary');
+        //增加 disable
+        currentPlayBtn.addClass('disabled');
     }
 
     function hasNext() {
@@ -100,6 +114,7 @@
         let movieName = ele.data('movieName');
         let videoName = ele.data('videoName');
         let url = ele.data('url');
+        changeBtnStatus(ele);
         nextIndex--;
 
         $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
