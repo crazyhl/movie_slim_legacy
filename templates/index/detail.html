@@ -78,6 +78,7 @@
 
         $("#current-play").text('正在播放:' + sourceName + '-' + movieName + '-' + videoName)
         $("#current-play").css('display', 'block');
+        $('title').html(movieName + videoName + '(' + sourceName + ') - {{baseTitle}}' )
 
         return url;
     }
