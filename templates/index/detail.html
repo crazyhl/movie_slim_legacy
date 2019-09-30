@@ -181,7 +181,9 @@
 
     $(function () {
         $('#sourceMovieListSelector').on('change', () => {
-            console.log($('#sourceMovieListSelector').val());
+            $sourceWebSiteId = $('#sourceMovieListSelector').val();
+            $('.source-movie-list').css('display', 'none');
+            $('#source-movie-list-' + $sourceWebSiteId).css('display', 'block');
         })
 
         $('.playBtn').click(function () {
