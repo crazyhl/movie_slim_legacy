@@ -121,10 +121,8 @@
         let currentPlayMovieWebsiteDivArr = currentPlayBtn.parents('.source-movie-list');
         if (currentPlayMovieWebsiteDivArr.length > 0) {
             let currentPlayMovieWebsiteDiv = currentPlayMovieWebsiteDivArr[0];
-            console.log(currentPlayMovieWebsiteDiv);
             let currentPlayMovieWebsiteDivEle = $(currentPlayMovieWebsiteDiv);
             let currentSourceWebSiteId = currentPlayMovieWebsiteDivEle.data('sourceMovieWebsiteId');
-            console.log(currentSourceWebSiteId);
             $('#sourceMovieListSelectorContainer').css('display', 'block');
             $('#sourceMovieListSelector').val(currentSourceWebSiteId);
             $('.source-movie-list').css('display', 'none');
@@ -182,6 +180,10 @@
     }
 
     $(function () {
+        $('#sourceMovieListSelector').on('change', () => {
+            console.log(this.value);
+        })
+
         $('.playBtn').click(function () {
             nextName = $(this).data('sourceName');
             nextIndex = $(this).data('index');
