@@ -41,9 +41,20 @@
     <div class="alert alert-primary current-play mb-0 small p-2" role="alert">
         this is current play info
     </div>
+
+    <div class="mt-2 mb-2">
+        <select id="sourceMovieListSelector">
+            {% for sourceMovie in movie.sourceMovies %}
+            <option value="{{sourceMovie.sourceWebsite.id}}">{{sourceMovie.sourceWebsite.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
     {% for sourceMovie in movie.sourceMovies %}
     <div class="card mb-2 mt-2 source-movie-list source-movie-list-{{sourceMovie.sourceWebsite.id}}">
-        <h6 class="card-header  pt-2 pb-2 pl-2 pr-2">{{sourceMovie.sourceWebsite.name}}</h6>
+        <div class="card-header  pt-2 pb-2 pl-2 pr-2">
+            <h6 >{{sourceMovie.sourceWebsite.name}}</h6>
+        </div>
         <div class="card-body p-2">
             {% for movieList in sourceMovie.format_movie_list %}
             <button type="button"
