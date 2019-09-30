@@ -9,6 +9,9 @@
     .playBtn{
         font-size: 0.5rem;
     }
+    #sourceMovieListSelectorContainer{
+        display: none;
+    }
 </style>
 {% endblock %}
 
@@ -42,8 +45,8 @@
         this is current play info
     </div>
 
-    <div class="mt-2 mb-2">
-        <select id="sourceMovieListSelector">
+    <div class="mt-2 mb-2" id="sourceMovieListSelectorContainer">
+        当前选择源站: <select id="sourceMovieListSelector">
             {% for sourceMovie in movie.sourceMovies %}
             <option value="{{sourceMovie.sourceWebsite.id}}">{{sourceMovie.sourceWebsite.name}}</option>
             {% endfor %}
@@ -51,7 +54,9 @@
     </div>
 
     {% for sourceMovie in movie.sourceMovies %}
-    <div class="card mb-2 mt-2 source-movie-list source-movie-list-{{sourceMovie.sourceWebsite.id}}">
+    <div class="card mb-2 mt-2 source-movie-list"
+        id="source-movie-list-{{sourceMovie.sourceWebsite.id}}"
+        data-source-movie-website-id="{{sourceMovie.sourceWebsite.id}}">
         <div class="card-header  pt-2 pb-2 pl-2 pr-2">
             <h6 >{{sourceMovie.sourceWebsite.name}}</h6>
         </div>
@@ -112,6 +117,19 @@
         currentPlayBtn.removeClass('tn-primary');
         //增加 disable
         currentPlayBtn.addClass('disabled');
+        // 设置隐藏其他列表，只保留选择列表，展示复选框，
+        let currentPlayMovieWebsiteDivArr = currentPlayBtn.parents('.source-movie-list');
+        if (currentPlayMovieWebsiteDivArr.length > 0) {
+            let currentPlayMovieWebsiteDiv = currentPlayMovieWebsiteDivArr[0];
+            console.log(currentPlayMovieWebsiteDiv);
+            let currentPlayMovieWebsiteDivEle = $(currentPlayMovieWebsiteDiv);
+            let currentSourceWebSiteId = currentPlayMovieWebsiteDivEle.data('sourceMovieWebsiteId');
+            console.log(currentSourceWebSiteId);
+            $('#sourceMovieListSelectorContainer').css('display', 'block');
+            $('#sourceMovieListSelector').val(currentSourceWebSiteId);
+            $('.source-movie-list').css('display', 'none');
+            currentPlayMovieWebsiteDivEle.css('display', 'block');
+        }
     }
 
     function hasNext() {
